@@ -4,6 +4,7 @@ import {createAppContainer} from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack';
 import Home from './src/screens/Home';
 import Login from './src/screens/Login';
+import Details from './src/screens/Details'
 import Favorites from './src/screens/Favorites'
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 
@@ -59,7 +60,13 @@ const AppNavigator = createStackNavigator({
       navigationOptions : {
           header:null
       }
-  },
+    },
+    Details: { 
+      screen: Details,
+      navigationOptions : {
+        header:null
+    }
+    },
    
 });
 

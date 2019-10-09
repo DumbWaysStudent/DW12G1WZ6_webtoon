@@ -20,7 +20,9 @@ export default class Home extends Component {
     };
   }
 
-
+  toDetailScreen=()=>{
+    this.props.navigation.navigate('Details')
+  }
 
   render() {
     return (
@@ -58,7 +60,7 @@ export default class Home extends Component {
           horizontal={true}
           data={this.state.listManga}
           renderItem={({item})=>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={this.toDetailScreen}>
             <Image
             onPress
             style={styles.coverMangaFav}
@@ -66,14 +68,16 @@ export default class Home extends Component {
             <Text style={styles.titleMangaFav}>{item.title}</Text>
           </TouchableOpacity>
           }
+          keyExtractor = {(item,index)=>index.toString()}
         />
 
         <View style={{marginBottom : 20}}>
           <Label style={{fontWeight:'bold', marginBottom :10}}>All</Label>
           {this.state.listManga.map((item,index)=>{
             return(
-              <View key={index} 
-              style={{flexDirection:"row"}}>
+              <TouchableOpacity key={index} 
+              style={{flexDirection:"row"}}
+              onPress={this.toDetailScreen}>
                 <Image
                   style={styles.coverAll}
                   source={item.image}/>
@@ -84,7 +88,7 @@ export default class Home extends Component {
                       <Text style={{color:'white'}}>Favorites</Text>
                     </TouchableOpacity>
                   </View>
-              </View>
+              </TouchableOpacity>
               )
             }
           )}
