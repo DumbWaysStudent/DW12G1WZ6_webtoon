@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Image } from 'react-native';
 import {createAppContainer} from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack';
+import EditChapter from './src/screens/EditChapter'
 import Profile from './src/screens/Profile'
 import DetailCreateChapter from './src/screens/DetailCreateChapter'
 import Home from './src/screens/Home'
@@ -116,6 +117,13 @@ const AppNavigator = createStackNavigator({
         header:null
       }
     },
+    EditChapter : {
+      screen : EditChapter,
+      navigationOptions : {
+        header:null
+      }
+    }
+    
     
    
 });

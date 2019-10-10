@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text,FlatList,StyleSheet,TouchableOpacity,Image } from 'react-native';
 import { Form,Item, Input, Label,Header, Left, Body, Right,Icon } from 'native-base';
 
-export default class DetailCreateChapter extends Component {
+export default class EditChapter extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -38,7 +38,7 @@ export default class DetailCreateChapter extends Component {
           </Right>
         </Header>
       <View>
-        <Label style={{padding : 15}}>Title</Label>
+        <Label style={{padding : 15}}>Name</Label>
         <Form>
           <Item>
             <Input style={styles.form}
@@ -47,12 +47,12 @@ export default class DetailCreateChapter extends Component {
         </Form>
       </View>
       <View style={styles.layout}>
-        <Label style={{marginBottom:15}}>Chapter</Label>
+        <Label style={{marginBottom:15}}>Add Image</Label>
         <FlatList
           style={styles.flatlist}
           data={this.state.listManga}
           renderItem={({item})=>
-          <TouchableOpacity  style={{flexDirection:'row'}} onPress={this.goToEditChapter}>
+          <TouchableOpacity  style={{flexDirection:'row'}}>
             <Image
             onPress
             style={styles.coverMangaFav}
@@ -67,13 +67,13 @@ export default class DetailCreateChapter extends Component {
         />
         <View style={{marginBottom : 20}}>
           <TouchableOpacity style={styles.button}>
-            <Text style={{color:'white'}} onPress={this.goToCreateManga}>
-              Add Chapter
+            <Text style={{color:'white'}}>
+              Add Image
             </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.buttonDel}>
             <Text style={{color:'white'}}>
-              Delete Manga
+              Delete Chapter
             </Text>
             </TouchableOpacity>
         </View>
