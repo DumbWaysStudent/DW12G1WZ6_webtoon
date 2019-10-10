@@ -2,19 +2,17 @@ import React, { Component } from 'react';
 import { View, Text,FlatList,StyleSheet,TouchableOpacity,Image } from 'react-native';
 import { Form,Item, Input, Label,Header, Left, Body, Right,Icon } from 'native-base';
 
-export default class CreateManga extends Component {
+export default class CreateChapter extends Component {
   constructor(props) {
     super(props);
     this.state = {
       listManga:[
         {date:'15 Agustus 2028', image:require('../assets/cover/boku.jpg'), chapter:'Chapter 190'},
-        {date:'14 Agustus 2028', image:require('../assets/cover/cover_onepiece.jpg'),chapter:'Chapter 189'},
-        {date:'13 Agustus 2028', image:require('../assets/cover/sunarto.jpg'),chapter:'Chapter 188'}],
+        {date:'14 Agustus 2028', image:require('../assets/cover/cover_onepiece.jpg'),chapter:'Chapter 189'}],
     };
   }
 
   goToPrevScreen = () =>  this.props.navigation.goBack();
-  goToCreateChapter = () =>  this.props.navigation.navigate('CreateChapter');
 
   render() {
     return (
@@ -27,7 +25,7 @@ export default class CreateManga extends Component {
             </TouchableOpacity>
           </Left>
           <Body>
-              <Text>Creaate Manga</Text>
+              <Text>Create Manga</Text>
           </Body>
           <Right>
             <TouchableOpacity transparent>
@@ -57,15 +55,18 @@ export default class CreateManga extends Component {
             source={item.image}/>
             <View>
               <Text style={styles.titleMangaFav}>{item.chapter}</Text>
-              <Text style={styles.titleMangaFav}>{item.date}</Text>
+              <TouchableOpacity style={styles.buttonDel}>
+                <Text style={{color:'white'}}>
+                    Delete
+                </Text>
+              </TouchableOpacity>
             </View>
           </TouchableOpacity>
           }
           keyExtractor = {(item,index)=>index.toString()}
         />
         <View style={{marginBottom : 20}}>
-          <TouchableOpacity style={styles.button}
-          onPress ={this.goToCreateChapter}>
+          <TouchableOpacity style={styles.button}>
             <Text style={{color:'white'}}>
               Add Chapter
             </Text>
@@ -101,6 +102,13 @@ const styles = StyleSheet.create({
     marginTop:20,
     padding : 20,
     backgroundColor : 'orange',
+    justifyContent : 'center',
+    },
+   buttonDel:{
+    marginTop:15,
+    alignItems : 'center',
+    padding : 10,
+    backgroundColor : 'red',
     justifyContent : 'center',
     },
 })

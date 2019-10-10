@@ -4,6 +4,7 @@ import {createAppContainer} from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack';
 import Profile from './src/screens/Profile'
 import Home from './src/screens/Home'
+import CreateChapter from './src/screens/CreateChapter'
 import CreateManga from './src/screens/CreateManga'
 import MangaCreation from './src/screens/MangaCreation'
 import EditProfile from './src/screens/EditProfile'
@@ -98,6 +99,12 @@ const AppNavigator = createStackNavigator({
     },
     CreateManga : {
       screen : CreateManga,
+      navigationOptions : {
+        header:null
+      }
+    },
+    CreateChapter : {
+      screen : CreateChapter,
       navigationOptions : {
         header:null
       }
