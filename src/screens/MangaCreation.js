@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text,Image,Dimensions,StyleSheet,TouchableOpacity,FlatList,Share } from 'react-native';
+import { View, Text,Image,Dimensions,StyleSheet,TouchableOpacity,FlatList,Button } from 'react-native';
 import { Header, Left, Body, Right, Icon, } from 'native-base';
 
 const fitScreen = Dimensions.get('window').width;
@@ -52,6 +52,9 @@ export default class MangaCreation extends Component {
           }
           keyExtractor = {(item,index)=>index.toString()}
         />
+       <TouchableOpacity style={styles.buttonAdd}>
+         <Icon name='add' style={{color:'white',padding:10}}></Icon>
+       </TouchableOpacity>
       </View>
     );
   }
@@ -77,6 +80,14 @@ const styles = StyleSheet.create({
       },
     dateChapter :{
         marginRight: 5
+    },
+    buttonAdd:{
+      borderRadius:30,
+      alignItems: 'center',
+      width:50,
+      backgroundColor:'orange',
+      margin:30,
+      alignSelf:'flex-end'
     }
     
 })
