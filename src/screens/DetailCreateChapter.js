@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text,FlatList,StyleSheet,TouchableOpacity,Image } from 'react-native';
 import { Form,Item, Input, Label,Header, Left, Body, Right,Icon } from 'native-base';
 
-export default class CreateManga extends Component {
+export default class DetailCreateChapter extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,8 +15,7 @@ export default class CreateManga extends Component {
 
   goToPrevScreen = () =>  this.props.navigation.goBack();
   goToCreateChapter = () =>  this.props.navigation.navigate('CreateChapter');
-  goToDetailCreateChapter =()=> this.props.navigation.navigate('DetailCreateChapter')
-  
+
   render() {
     return (
     <View>
@@ -28,7 +27,7 @@ export default class CreateManga extends Component {
             </TouchableOpacity>
           </Left>
           <Body>
-              <Text>Create Manga</Text>
+              <Text>Creaate Manga</Text>
           </Body>
           <Right>
             <TouchableOpacity transparent>
@@ -51,7 +50,7 @@ export default class CreateManga extends Component {
           style={styles.flatlist}
           data={this.state.listManga}
           renderItem={({item})=>
-          <TouchableOpacity onPress={this.goToDetailCreateChapter} style={{flexDirection:'row'}}>
+          <TouchableOpacity  style={{flexDirection:'row'}}>
             <Image
             onPress
             style={styles.coverMangaFav}
@@ -65,10 +64,14 @@ export default class CreateManga extends Component {
           keyExtractor = {(item,index)=>index.toString()}
         />
         <View style={{marginBottom : 20}}>
-          <TouchableOpacity style={styles.button}
-          onPress ={this.goToCreateChapter}>
+          <TouchableOpacity style={styles.button}>
             <Text style={{color:'white'}}>
               Add Chapter
+            </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonDel}>
+            <Text style={{color:'white'}}>
+              Delete Manga
             </Text>
             </TouchableOpacity>
         </View>
@@ -104,4 +107,11 @@ const styles = StyleSheet.create({
     backgroundColor : 'orange',
     justifyContent : 'center',
     },
+    buttonDel:{
+        marginTop:5,
+        alignItems : 'center',
+        padding : 20,
+        backgroundColor : 'red',
+        justifyContent : 'center',
+        },
 })

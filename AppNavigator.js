@@ -3,6 +3,7 @@ import {Image } from 'react-native';
 import {createAppContainer} from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack';
 import Profile from './src/screens/Profile'
+import DetailCreateChapter from './src/screens/DetailCreateChapter'
 import Home from './src/screens/Home'
 import CreateChapter from './src/screens/CreateChapter'
 import CreateManga from './src/screens/CreateManga'
@@ -105,6 +106,12 @@ const AppNavigator = createStackNavigator({
     },
     CreateChapter : {
       screen : CreateChapter,
+      navigationOptions : {
+        header:null
+      }
+    },
+    DetailCreateChapter : {
+      screen : DetailCreateChapter,
       navigationOptions : {
         header:null
       }
