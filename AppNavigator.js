@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Image } from 'react-native';
 import {createAppContainer} from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack';
+import Profile from './src/screens/Profile'
 import Home from './src/screens/Home';
 import Login from './src/screens/Login';
 import Details from './src/screens/Details'
@@ -11,9 +12,9 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 
 const MainApp = createBottomTabNavigator(
     {
-      Profile: {screen:Home},
-      Favorites :{screen:Favorites} ,
       ForYou : {screen:Home},
+      Favorites :{screen:Favorites} ,
+      Profile: {screen:Profile},
     },
     {
       defaultNavigationOptions: ({ navigation }) => ({
@@ -70,6 +71,12 @@ const AppNavigator = createStackNavigator({
     },
     DetailsChapter : {
       screen : DetailsChapter,
+      navigationOptions : {
+        header:null
+      }
+    },
+    Profile : {
+      screen : Profile,
       navigationOptions : {
         header:null
       }
