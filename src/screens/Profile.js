@@ -10,6 +10,8 @@ export default class Profile extends Component {
     this.state = {
     };
   }
+  
+  goToEditProfile =()=> this.props.navigation.navigate('EditProfile')
 
   render() {
     return (
@@ -29,7 +31,9 @@ export default class Profile extends Component {
           />
           <Text>Rizky</Text>
           <View style={{marginTop : 30}}>
-            <TouchableOpacity style={styles.button}><Text style={{padding:20}}>My Manga Creation</Text></TouchableOpacity>
+            <TouchableOpacity 
+            style={styles.button}
+            onPress={this.goToEditProfile}><Text style={{padding:20}}>My Manga Creation</Text></TouchableOpacity>
             <TouchableOpacity style={styles.button}><Text style={{padding:20}}>Logout</Text></TouchableOpacity>
           </View>
 

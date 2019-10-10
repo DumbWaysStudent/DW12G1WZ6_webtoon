@@ -4,6 +4,7 @@ import {createAppContainer} from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack';
 import Profile from './src/screens/Profile'
 import Home from './src/screens/Home';
+import EditProfile from './src/screens/EditProfile'
 import Login from './src/screens/Login';
 import Details from './src/screens/Details'
 import DetailsChapter from './src/screens/DetailChapter'
@@ -80,7 +81,13 @@ const AppNavigator = createStackNavigator({
       navigationOptions : {
         header:null
       }
-    }
+    },
+    EditProfile : {
+      screen : EditProfile,
+      navigationOptions : {
+        header:null
+      }
+    },
    
 });
 
