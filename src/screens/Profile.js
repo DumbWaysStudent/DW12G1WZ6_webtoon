@@ -21,7 +21,7 @@ export default class Profile extends Component {
                     <Text>Profile</Text>
                 </Body>
                 <Right>             
-                    <Icon name='create' />
+                    <Icon name='create' onPress={this.goToEditProfile}/>
                 </Right>
           </Header>
           <View style={{borderRadius: 50, alignItems: 'center'}}>
@@ -33,7 +33,7 @@ export default class Profile extends Component {
           <View style={{marginTop : 30}}>
             <TouchableOpacity 
             style={styles.button}
-            onPress={this.goToEditProfile}><Text style={{padding:20}}>My Manga Creation</Text></TouchableOpacity>
+            ><Text style={{padding:20}}>My Manga Creation</Text></TouchableOpacity>
             <TouchableOpacity style={styles.button}><Text style={{padding:20}}>Logout</Text></TouchableOpacity>
           </View>
 
