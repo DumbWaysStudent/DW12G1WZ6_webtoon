@@ -10,7 +10,7 @@ export default class EditProfile extends Component {
     super(props);
     this.state = {
         profilePhoto:{
-            url : require('../assets/defaultUser.png')
+            uri : 'https://akcdn.detik.net.id/community/media/visual/2019/04/03/dac43146-7dd4-49f4-89ca-d81f57b070fc.jpeg?w=770&q=90'
         }
     };
   }
@@ -45,7 +45,7 @@ export default class EditProfile extends Component {
           // const source = { uri: 'data:image/jpeg;base64,' + response.data };
       
           this.setState({
-            photoProfile: source.uri,
+            profilePhoto: source,
           });
         }
       });
@@ -65,7 +65,7 @@ export default class EditProfile extends Component {
           <View style={{borderRadius: 50, alignItems: 'center'}}>
           <Image
             style={styles.photoProfile}
-            source={this.state.profilePhoto}
+            source={{uri : this.state.profilePhoto.uri}}
           />
           <Icon name="camera" onPress={this.handleCamera}/>
           <View style={{marginTop : 30}}>
