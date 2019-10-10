@@ -3,7 +3,8 @@ import {Image } from 'react-native';
 import {createAppContainer} from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack';
 import Profile from './src/screens/Profile'
-import Home from './src/screens/Home';
+import Home from './src/screens/Home'
+import MangaCreation from './src/screens/MangaCreation'
 import EditProfile from './src/screens/EditProfile'
 import Login from './src/screens/Login';
 import Details from './src/screens/Details'
@@ -84,6 +85,12 @@ const AppNavigator = createStackNavigator({
     },
     EditProfile : {
       screen : EditProfile,
+      navigationOptions : {
+        header:null
+      }
+    },
+    MangaCreation : {
+      screen : MangaCreation,
       navigationOptions : {
         header:null
       }

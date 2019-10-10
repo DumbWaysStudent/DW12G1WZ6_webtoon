@@ -12,6 +12,7 @@ export default class Profile extends Component {
   }
   
   goToEditProfile =()=> this.props.navigation.navigate('EditProfile')
+  goToMangaCreation =()=>this.props.navigation.navigate('MangaCreation')
 
   render() {
     return (
@@ -33,7 +34,7 @@ export default class Profile extends Component {
           <View style={{marginTop : 30}}>
             <TouchableOpacity 
             style={styles.button}
-            ><Text style={{padding:20}}>My Manga Creation</Text></TouchableOpacity>
+            onPress={this.goToMangaCreation}><Text style={{padding:20}}>My Manga Creation</Text></TouchableOpacity>
             <TouchableOpacity style={styles.button}><Text style={{padding:20}}>Logout</Text></TouchableOpacity>
           </View>
 
