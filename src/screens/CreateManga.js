@@ -26,7 +26,7 @@ export default class CreateManga extends Component {
             </TouchableOpacity>
           </Left>
           <Body>
-              <Text>Creaate Manga</Text>
+              <Text>Create Manga</Text>
           </Body>
           <Right>
             <TouchableOpacity transparent>
@@ -49,7 +49,7 @@ export default class CreateManga extends Component {
           style={styles.flatlist}
           data={this.state.listManga}
           renderItem={({item})=>
-          <TouchableOpacity onPress={this.toDetailScreen} style={{flexDirection:'row'}}>
+          <TouchableOpacity style={{flexDirection:'row'}}>
             <Image
             onPress
             style={styles.coverMangaFav}
