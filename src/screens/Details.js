@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text,Image,Dimensions,StyleSheet,TouchableOpacity,FlatList,Share } from 'react-native';
-import { Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
+import { Header, Left, Body, Right, Icon, } from 'native-base';
 
 const fitScreen = Dimensions.get('window').width;
 
@@ -24,8 +24,8 @@ export default class Details extends Component {
   }  
   
   onSharePress = () => Share.share(shareOptions);
-  
-  goToPrevScreen=()=>  this.props.navigation.navigate('Home');
+  goToDetailChapter = () => this.props.navigation.navigate('DetailsChapter')
+  goToPrevScreen = () =>  this.props.navigation.goBack();
   
   render() {
     return (
@@ -55,7 +55,9 @@ export default class Details extends Component {
           style={styles.listChapter}
           data={this.state.listManga}
           renderItem={({item})=>
-          <View style={{flexDirection:'row'}}>
+          <TouchableOpacity style={{flexDirection:'row'}}
+            onPress={this.goToDetailChapter}
+          >
             <Image
             style={styles.imageChapter}
             source={item.image}/>
@@ -63,7 +65,7 @@ export default class Details extends Component {
             <Text style={styles.titleChapter}>{item.chapter}</Text>
             <Text style={styles.dateChapter}>{item.date}</Text>
             </View>
-          </View>
+          </TouchableOpacity>
           }
           keyExtractor = {(item,index)=>index.toString()}
         />

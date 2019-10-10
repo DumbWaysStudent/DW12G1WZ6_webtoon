@@ -5,14 +5,15 @@ import { createStackNavigator } from 'react-navigation-stack';
 import Home from './src/screens/Home';
 import Login from './src/screens/Login';
 import Details from './src/screens/Details'
+import DetailsChapter from './src/screens/DetailChapter'
 import Favorites from './src/screens/Favorites'
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 
 const MainApp = createBottomTabNavigator(
     {
-      Profile: {screen:Home} ,
+      Profile: {screen:Home},
       Favorites :{screen:Favorites} ,
-      ForYou : {screen:Home}
+      ForYou : {screen:Home},
     },
     {
       defaultNavigationOptions: ({ navigation }) => ({
@@ -50,10 +51,10 @@ const MainApp = createBottomTabNavigator(
 const AppNavigator = createStackNavigator({
    
     Login : {
-        screen :Login,
-        navigationOptions : {
-            header:null
-        }
+      screen :Login,
+      navigationOptions : {
+      header:null
+      }
     },
     Home: { 
       screen: MainApp,
@@ -67,6 +68,12 @@ const AppNavigator = createStackNavigator({
         header:null
     }
     },
+    DetailsChapter : {
+      screen : DetailsChapter,
+      navigationOptions : {
+        header:null
+      }
+    }
    
 });
 
