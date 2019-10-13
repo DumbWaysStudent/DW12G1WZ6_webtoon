@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text,Image,Dimensions,StyleSheet,TouchableOpacity,FlatList,Share } from 'react-native';
-import { Header, Left, Body, Right, Icon, } from 'native-base';
+import { Header, Left, Body, Right, Icon,Card, CardItem } from 'native-base';
 
 const fitScreen = Dimensions.get('window').width;
 
@@ -51,24 +51,28 @@ export default class Details extends Component {
         source={require('../assets/banner/onePieceBanner.jpg')}
         style={styles.banner}
         />
-         <FlatList
-          style={styles.listChapter}
-          data={this.state.listManga}
-          renderItem={({item})=>
-          <TouchableOpacity style={{flexDirection:'row'}}
-            onPress={this.goToDetailChapter}
-          >
-            <Image
-            style={styles.imageChapter}
-            source={item.image}/>
-            <View>
-            <Text style={styles.titleChapter}>{item.chapter}</Text>
-            <Text style={styles.dateChapter}>{item.date}</Text>
-            </View>
-          </TouchableOpacity>
-          }
-          keyExtractor = {(item,index)=>index.toString()}
-        />
+        <Card>
+          <CardItem>
+            <Body>
+            <FlatList
+              data={this.state.listManga}
+              renderItem={({item})=>
+              <TouchableOpacity style={{flexDirection:'row'}}
+                onPress={this.goToDetailChapter}>
+                <Image
+                style={styles.imageChapter}
+                source={item.image}/>
+                <View>
+                <Text style={styles.titleChapter}>{item.chapter}</Text>
+                <Text style={styles.dateChapter}>{item.date}</Text>
+                </View>
+              </TouchableOpacity>
+              }
+              keyExtractor = {(item,index)=>index.toString()}
+            />
+            </Body>
+          </CardItem>
+        </Card>
       </View>
     );
   }
@@ -86,7 +90,7 @@ const styles = StyleSheet.create({
         marginRight: 5,
       },
     listChapter:{
-        margin : 10
+        margin : 5
     },
     titleChapter:{
         marginBottom:10 , 

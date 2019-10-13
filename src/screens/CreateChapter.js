@@ -68,7 +68,7 @@ export default class CreateChapter extends Component {
         <View style={{marginBottom : 20}}>
           <TouchableOpacity style={styles.button}>
             <Text style={{color:'white'}}>
-              Add Chapter
+              Edit Chapter
             </Text>
             </TouchableOpacity>
         </View>

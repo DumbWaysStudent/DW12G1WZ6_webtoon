@@ -11,7 +11,18 @@ export default class Favorites extends Component {
         {title:'One Piece', image:require('../assets/cover/cover_onepiece.jpg'),favorites:'100+ Favorites'},
         {title:'Sunarto', image:require('../assets/cover/sunarto.jpg'),favorites:'70+ Favorites'},
         {title:'Bocah Laknat', image:require('../assets/cover/bocahLaknat.jpg'),favorites:'80+ Favorites'}],
+        input :''
     };
+  }
+
+  searchManga=()=>{
+    const listManga= this.state.listManga
+    const result = listManga.filter(listManga=>{
+       return listManga.title.toLowerCase().includes(this.state.input)
+    })
+    this.setState({
+      listManga : [...result]
+    })
   }
 
   render() {
@@ -21,8 +32,9 @@ export default class Favorites extends Component {
           <Item>
             <Input
               autoCapitalize ='none'
-              placeholder ='Search..'/>
-            <Icon name='ios-search'></Icon>
+              placeholder ='Search..'
+              onChangeText={input => this.setState({input : input})}/>
+            <Icon name='ios-search' onPress={this.searchManga}></Icon>
           </Item>
         </Form>
 

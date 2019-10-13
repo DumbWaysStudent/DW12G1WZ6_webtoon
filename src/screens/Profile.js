@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text,TouchableOpacity,StyleSheet,Image,Dimensions } from 'react-native';
-import { Header, Left, Body, Right, Icon, } from 'native-base'
+import { Header, Left, Body, Right, Icon, CardItem,Card } from 'native-base'
 
 const fitScreen = Dimensions.get('window').width;
 
@@ -13,7 +13,8 @@ export default class Profile extends Component {
   
   goToEditProfile =()=> this.props.navigation.navigate('EditProfile')
   goToMangaCreation =()=>this.props.navigation.navigate('MangaCreation')
-
+  goToPrevScreen =()=>this.props.navigation.goBack();
+  logOut =()=>this.props.navigation.navigate('Login')
   render() {
     return (
       <View>
@@ -32,10 +33,15 @@ export default class Profile extends Component {
           />
           <Text>Rizky</Text>
           <View style={{marginTop : 30}}>
-            <TouchableOpacity 
-            style={styles.button}
-            onPress={this.goToMangaCreation}><Text style={{padding:20}}>My Manga Creation</Text></TouchableOpacity>
-            <TouchableOpacity style={styles.button}><Text style={{padding:20}}>Logout</Text></TouchableOpacity>
+          
+              <TouchableOpacity 
+              style={styles.button}
+              onPress={this.goToMangaCreation}>
+              <Text style={{padding:20,color:'white'}}>My Manga Creation</Text>
+              <Icon name='arrow-dropright' style={styles.nextIcon} onPress={this.goToPrevScreen}/>
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.buttonLogout} onPress={this.logOut}><Text style={{padding:20,color:'white'}}>Logout</Text></TouchableOpacity>
           </View>
 
           </View>
@@ -53,9 +59,24 @@ const styles = StyleSheet.create ({
     margin: 20
   },
   button:{
+    borderRadius:20,
+    backgroundColor:'#273c75',
+    flexDirection:"row",
     marginTop :1,
-    width: fitScreen,
-    borderColor: 'gray',
-    borderWidth: 1
+    width: fitScreen*0.97,
+    justifyContent : "space-between"
+  },
+  buttonLogout:{
+    borderRadius:20,
+    backgroundColor:'#e84118',
+    flexDirection:"row",
+    marginTop :1,
+    width: fitScreen*0.97,
+    justifyContent : "space-between"
+  },
+  nextIcon:{
+    color: 'white',
+    alignSelf:'flex-end',
+    margin:10
   }
 })

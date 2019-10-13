@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet,Image,Dimensions } from 'react-native';
-import { Header, Body, Right, Icon,Form, Item, Input} from 'native-base'
+import { Header, Body, Right, Icon,Form, Item, Input, Left} from 'native-base'
 const fitScreen = Dimensions.get('window').width * 0.75;
 import ImagePicker from 'react-native-image-picker';
 
@@ -51,10 +51,15 @@ export default class EditProfile extends Component {
       });
   }
 
+  goToPrevScreen=()=> this.props.navigation.goBack()
+
   render() {
     return (
       <View>
           <Header style ={{backgroundColor:'light-gray'}}>
+                <Left>
+                  <Icon name ='arrow-back' onPress={this.goToPrevScreen}/>
+                </Left>
                 <Body>
                     <Text>Edit Profile</Text>
                 </Body>

@@ -7,15 +7,27 @@ export default class CreateManga extends Component {
     super(props);
     this.state = {
       listManga:[
-        {date:'15 Agustus 2028', image:require('../assets/cover/boku.jpg'), chapter:'Chapter 190'},
-        {date:'14 Agustus 2028', image:require('../assets/cover/cover_onepiece.jpg'),chapter:'Chapter 189'},
-        {date:'13 Agustus 2028', image:require('../assets/cover/sunarto.jpg'),chapter:'Chapter 188'}],
+        {date:'15 Agustus 2028', image:require('../assets/cover/boku.jpg'), title:'Boku No Pico'},
+        {date:'14 Agustus 2028', image:require('../assets/cover/cover_onepiece.jpg'), title:'One Pice'},
+        {date:'13 Agustus 2028', image:require('../assets/cover/sunarto.jpg'), title:'Sunarto'}],
+      input : ''
     };
   }
 
   goToPrevScreen = () =>  this.props.navigation.goBack();
   goToCreateChapter = () =>  this.props.navigation.navigate('CreateChapter');
   goToDetailCreateChapter =()=> this.props.navigation.navigate('DetailCreateChapter')
+  addManga =()=>{
+    const ListManga = this.state.listManga;
+    const addedManga = [{
+      date : '17 Agustus 2019',
+      image : require('../assets/cover/sunarto.jpg'),
+      title : this.state.input
+    }]
+    this.setState({
+      listManga : [...ListManga,...addedManga]
+    })
+  }
   
   render() {
     return (
@@ -41,7 +53,8 @@ export default class CreateManga extends Component {
         <Form>
           <Item>
             <Input style={styles.form}
-              placeholder ='Input Title Manga'/>
+              placeholder ='Input Title Manga'
+              onChangeText={input => this.setState({input : input})}/>
           </Item>
         </Form>
       </View>
@@ -51,14 +64,14 @@ export default class CreateManga extends Component {
           style={styles.flatlist}
           data={this.state.listManga}
           renderItem={({item})=>
-          <TouchableOpacity onPress={this.goToDetailCreateChapter} style={{flexDirection:'row'}}>
+          <TouchableOpacity style={{flexDirection:'row'}}>
             <Image
             onPress
             style={styles.coverMangaFav}
             source={item.image}/>
             <View>
-              <Text style={styles.titleMangaFav}>{item.chapter}</Text>
               <Text style={styles.titleMangaFav}>{item.date}</Text>
+              <Text style={styles.titleMangaFav}>{item.title}</Text>
             </View>
           </TouchableOpacity>
           }
@@ -66,9 +79,9 @@ export default class CreateManga extends Component {
         />
         <View style={{marginBottom : 20}}>
           <TouchableOpacity style={styles.button}
-          onPress ={this.goToCreateChapter}>
+          onPress ={this.addManga}>
             <Text style={{color:'white'}}>
-              Add Chapter
+              Add Manga
             </Text>
             </TouchableOpacity>
         </View>
@@ -101,7 +114,7 @@ const styles = StyleSheet.create({
     alignItems : 'center',
     marginTop:20,
     padding : 20,
-    backgroundColor : 'orange',
+    backgroundColor : '#273c75',
     justifyContent : 'center',
     },
 })

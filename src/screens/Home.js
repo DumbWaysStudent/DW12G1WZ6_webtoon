@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text,Image,Dimensions,FlatList,StyleSheet,ScrollView } from 'react-native';
 import ImageSlider from 'react-native-image-slider';
-import { Form, Item, Input, Label,Icon } from 'native-base';
+import { Form, Item, Input, Label,Icon,  Card, CardItem, Body  } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
 
 const width = Dimensions.get('window').width;
 
@@ -26,7 +27,7 @@ export default class Home extends Component {
 
   render() {
     return (
-      <ScrollView style={{padding : 10}}>
+      <ScrollView style={{padding : 5}}>
         <Form>
           <Item>
             <Input
@@ -52,46 +53,60 @@ export default class Home extends Component {
             'https://akcdn.detik.net.id/community/media/visual/2019/04/03/dac43146-7dd4-49f4-89ca-d81f57b070fc.jpeg?w=770&q=90'
         ]}/>
         </View>
-
-        <Label style={{fontWeight:'bold', marginBottom :10, marginTop:10}}>Favorites</Label>
-        <FlatList
-          showsHorizontalScrollIndicator ={false}
-          style={styles.horizontalFlatlist}
-          horizontal={true}
-          data={this.state.listManga}
-          renderItem={({item})=>
-          <TouchableOpacity onPress={this.toDetailScreen}>
-            <Image
-            onPress
-            style={styles.coverMangaFav}
-            source={item.image}/>
-            <Text style={styles.titleMangaFav}>{item.title}</Text>
-          </TouchableOpacity>
-          }
-          keyExtractor = {(item,index)=>index.toString()}
-        />
+        <Card>
+          <CardItem>
+            <Body>
+            <Label style={styles.label}>Favorites</Label>
+            <View style={{backgroundColor:'grey',height:1,width:width*0.86}}/>
+              <FlatList
+                showsHorizontalScrollIndicator ={false}
+                style={styles.horizontalFlatlist}
+                horizontal={true}
+                data={this.state.listManga}
+                renderItem={({item})=>
+                <TouchableOpacity onPress={this.toDetailScreen}>
+                  <Image
+                  onPress
+                  style={styles.coverMangaFav}
+                  source={item.image}/>
+                  <Text style={styles.titleMangaFav}>{item.title}</Text>
+                </TouchableOpacity>
+                }
+                keyExtractor = {(item,index)=>index.toString()}
+              />
+            </Body>
+          </CardItem>
+        </Card>
+      
 
         <View style={{marginBottom : 20}}>
-          <Label style={{fontWeight:'bold', marginBottom :10}}>All</Label>
-          {this.state.listManga.map((item,index)=>{
-            return(
-              <TouchableOpacity key={index} 
-              style={{flexDirection:"row"}}
-              onPress={this.toDetailScreen}>
-                <Image
-                  style={styles.coverAll}
-                  source={item.image}/>
-                  <View>
-                    <Text>{item.title}</Text>
-                    <Text>{item.chapter}</Text>
-                    <TouchableOpacity style={styles.buttonRead}>
-                      <Text style={{color:'white'}}>Favorites</Text>
-                    </TouchableOpacity>
-                  </View>
-              </TouchableOpacity>
-              )
-            }
-          )}
+          <Card>
+            <CardItem>
+              <Body>
+              <Label style={{fontWeight:'bold', marginBottom :10}}>All</Label>
+              {this.state.listManga.map((item,index)=>{
+                return(
+                  <TouchableOpacity key={index} 
+                  style={{flexDirection:"row"}}
+                  onPress={this.toDetailScreen}>
+                    <Image
+                      style={styles.coverAll}
+                      source={item.image}/>
+                      <View>
+                        <Text>{item.title}</Text>
+                        <Text>{item.chapter}</Text>
+                        <TouchableOpacity style={styles.buttonRead}>
+                          <Text style={{color:'white'}}>Favorites</Text>
+                        </TouchableOpacity>
+                      </View>
+                  </TouchableOpacity>
+                  )
+                }
+              )}
+              </Body>
+            </CardItem>
+          </Card>
+          
         </View>
         
       </ScrollView>
@@ -120,9 +135,15 @@ const styles = StyleSheet.create({
     marginRight: 5
   },
   buttonRead:{
+    borderRadius:5,
     padding: 10,
     height: 40, 
     marginTop: 10 ,
     backgroundColor :'orange'},
+  label:{
+    color:'#192a56',
+    fontWeight:'bold',
+    marginBottom :5, 
+    marginTop:5}
 
 })

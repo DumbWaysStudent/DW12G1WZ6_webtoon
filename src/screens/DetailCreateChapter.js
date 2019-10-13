@@ -29,7 +29,7 @@ export default class DetailCreateChapter extends Component {
             </TouchableOpacity>
           </Left>
           <Body>
-              <Text>Creaate Manga</Text>
+              <Text>Create Manga</Text>
           </Body>
           <Right>
             <TouchableOpacity transparent>
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     alignItems : 'center',
     marginTop:20,
     padding : 20,
-    backgroundColor : 'orange',
+    backgroundColor : '#273c75',
     justifyContent : 'center',
     },
   buttonDel:{

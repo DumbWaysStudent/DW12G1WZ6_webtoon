@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text,Image,Dimensions,StyleSheet,TouchableOpacity,FlatList,Button } from 'react-native';
-import { Header, Left, Body, Right, Icon, } from 'native-base';
+import { Header, Left, Body, Right, Icon, CardItem,Card } from 'native-base';
 
 const fitScreen = Dimensions.get('window').width;
 
@@ -19,6 +19,7 @@ export default class MangaCreation extends Component {
   }  
   
   goToPrevScreen = () =>  this.props.navigation.goBack();
+  goToEditScreen = () => this.props.navigation.navigate('EditChapter')
   goToCreateManga = () => this.props.navigation.navigate('CreateManga')
 
   render() {
@@ -34,22 +35,27 @@ export default class MangaCreation extends Component {
           <Body>
               <Text>My Manga Creation</Text>
           </Body>
-         
+          <Right></Right>
         </Header>
-      
          <FlatList
           style={styles.listChapter}
           data={this.state.listManga}
           renderItem={({item})=>
-          <View style={{flexDirection:'row'}}>
-            <Image
-            style={styles.imageChapter}
-            source={item.image}/>
-            <View>
-            <Text style={styles.titleChapter}>{item.title}</Text>
-            <Text style={styles.dateChapter}>{item.totalChap}</Text>
-            </View>
-          </View>
+          <Card>
+            <CardItem>
+              <TouchableOpacity onPress={this.goToEditScreen}>
+                <View style={{flexDirection:'row'}}>
+                  <Image
+                  style={styles.imageChapter}
+                  source={item.image}/>
+                  <View>
+                  <Text style={styles.titleChapter}>{item.title}</Text>
+                  <Text style={styles.dateChapter}>{item.totalChap}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </CardItem>
+          </Card>
           }
           keyExtractor = {(item,index)=>index.toString()}
         />
@@ -88,7 +94,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       width:50,
       backgroundColor:'orange',
-      margin:30,
+      margin:20,
       alignSelf:'flex-end'
     }
     

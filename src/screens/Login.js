@@ -1,11 +1,19 @@
 import React, { Component } from 'react';
-import { View, Text,StyleSheet,Image,TouchableOpacity } from 'react-native';
+import { View, Text,StyleSheet,Image,TouchableOpacity,Dimensions } from 'react-native';
 import { 
+  Card,
+  
     Icon,
-    Button, 
     Form, 
     Item, 
-    Input, } from 'native-base';
+    Input,
+    CardItem,
+    Body,
+   } from 'native-base';
+
+   const width = Dimensions.get('window').width*0.95;
+   const height = Dimensions.get('window').height*0.87;
+
 
 export default class Login extends Component {
   constructor(props) {
@@ -42,8 +50,9 @@ export default class Login extends Component {
 
   render() {
     return (
-   <View style={styles.form}>
-       <Image style={styles.logo}
+      <View style = { styles.container }>
+        <View style={styles.coba}>
+        <Image style={styles.logo}
        source = {require('./../assets/logo.png')}/>
         <Form style={styles.padding} >
             <Item>
@@ -78,14 +87,29 @@ export default class Login extends Component {
                 <Text style={styles.textButton}>Disabled</Text>
              </TouchableOpacity>
         }
-   </View>
+        </View>
+      </View>
     );
     }
 }
 const styles = StyleSheet.create({
+  container:
+  {   
+    justifyContent:'center',
+    flex: 1,
+    backgroundColor: '#0fbcf9' // Set your own custom Color
+  },
+  coba:{
+    borderRadius:10,
+    elevation:10,
+    alignSelf:'center',
+    width:width,
+    height:height,
+    backgroundColor: '#ecf0f1'
+  },
   button:{
     padding : 20,
-    backgroundColor : 'orange',
+    backgroundColor : '#273c75',
     justifyContent : 'center',
     marginLeft:20,
     marginRight:20},
@@ -106,8 +130,8 @@ const styles = StyleSheet.create({
     backgroundColor : 'red'
   },
   form:{
-      justifyContent:'center',
-      flex : 1,
+    flex:1,
+     color:'red'
   },
   padding : {
     marginBottom:20 ,
@@ -120,7 +144,7 @@ const styles = StyleSheet.create({
   logo: {
     alignSelf :'center',
     justifyContent : 'center',
-    width: 150, 
-    height: 200
+    width: 250, 
+    height: 70
   }
 });

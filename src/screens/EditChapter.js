@@ -10,6 +10,7 @@ export default class EditChapter extends Component {
         {date:'15 Agustus 2028', image:require('../assets/cover/boku.jpg'), chapter:'Chapter 190'},
         {date:'14 Agustus 2028', image:require('../assets/cover/cover_onepiece.jpg'),chapter:'Chapter 189'},
         {date:'13 Agustus 2028', image:require('../assets/cover/sunarto.jpg'),chapter:'Chapter 188'}],
+      input :''
     };
   }
 
@@ -17,6 +18,26 @@ export default class EditChapter extends Component {
   goToCreateChapter = () =>  this.props.navigation.navigate('CreateChapter');
   goToCreateManga = () => this.props.navigation.navigate('CreateManga');
   goToEditChapter =()=> this.props.navigation.navigate('EditChapter');
+  deleteManga = ()=>{
+    let listManga = this.state.listManga;
+     const deleteListManga = listManga.filter(dummy =>{
+      return dummy != listManga[0]
+    })
+    this.setState({
+      listManga : [...deleteListManga]
+    })
+  }
+  addManga =()=>{
+    const ListManga = this.state.listManga;
+    const addedManga = [{
+      date : '17 Agustus 2019',
+      image : require('../assets/cover/sunarto.jpg'),
+      chapter : this.state.input
+    }]
+    this.setState({
+      listManga : [...ListManga,...addedManga]
+    })
+  }
 
   render() {
     return (
@@ -29,20 +50,17 @@ export default class EditChapter extends Component {
             </TouchableOpacity>
           </Left>
           <Body>
-              <Text>Creaate Manga</Text>
+              <Text>Edit Chapter</Text>
           </Body>
-          <Right>
-            <TouchableOpacity transparent>
-              <Icon name='checkmark' />
-            </TouchableOpacity>
-          </Right>
+          <Right></Right>
         </Header>
       <View>
         <Label style={{padding : 15}}>Name</Label>
         <Form>
           <Item>
             <Input style={styles.form}
-              placeholder ='Input Title Manga'/>
+              placeholder ='Input Chapter Number'
+              onChangeText={input => this.setState({input : input})}/>
           </Item>
         </Form>
       </View>
@@ -67,11 +85,12 @@ export default class EditChapter extends Component {
         />
         <View style={{marginBottom : 20}}>
           <TouchableOpacity style={styles.button}>
-            <Text style={{color:'white'}}>
-              Add Image
+            <Text style={{color:'white'}}
+            onPress ={this.addManga}>
+              Add Chapter
             </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonDel}>
+            <TouchableOpacity style={styles.buttonDel} onPress={this.deleteManga}>
             <Text style={{color:'white'}}>
               Delete Chapter
             </Text>
@@ -106,7 +125,7 @@ const styles = StyleSheet.create({
     alignItems : 'center',
     marginTop:20,
     padding : 20,
-    backgroundColor : 'orange',
+    backgroundColor : '#273c75',
     justifyContent : 'center',
     },
   buttonDel:{
