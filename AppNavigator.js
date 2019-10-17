@@ -11,9 +11,12 @@ import CreateManga from './src/screens/CreateManga'
 import MangaCreation from './src/screens/MangaCreation'
 import EditProfile from './src/screens/EditProfile'
 import Login from './src/screens/Login';
+import Chapters from './src/screens/Chapters'
+import AddPage from './src/screens/AddPage'
 import Details from './src/screens/Details'
 import DetailsChapter from './src/screens/DetailChapter'
 import Favorites from './src/screens/Favorites'
+import ManageManga from './src/screens/ManageManga'
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 
 const MainApp = createBottomTabNavigator(
@@ -122,10 +125,25 @@ const AppNavigator = createStackNavigator({
       navigationOptions : {
         header:null
       }
-    }
-    
-    
-   
+    },
+    ManageManga : {
+      screen : ManageManga,
+      navigationOptions : {
+        header:null
+      }
+    },
+    Chapters : {
+      screen : Chapters,
+      navigationOptions : {
+        header:null
+      }
+    },
+    AddPage :{
+      screen : AddPage,
+      navigationOption :{
+        header : null
+      }
+    } 
 });
 
 export default createAppContainer(AppNavigator);

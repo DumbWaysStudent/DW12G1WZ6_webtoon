@@ -2,16 +2,7 @@ import React, { Component } from 'react';
 import { View, Text,Image,Dimensions,StyleSheet,TouchableOpacity,FlatList,Share } from 'react-native';
 import { Header, Left, Body, Right, Icon,Card, CardItem } from 'native-base';
 
-const fitScreen = Dimensions.get('window').width;
-
-const shareOptions = {
-  title: 'Title',
-  message: 'Message to share', // Note that according to the documentation at least one of "message" or "url" fields is required
-  url: 'www.example.com',
-  subject: 'Subject'
-};
-
-export default class Details extends Component {
+export default class Chapters extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,15 +10,14 @@ export default class Details extends Component {
           {date:'14 Agustus 2028', image:require('../assets/cover/cover_onepiece.jpg'),chapter:'Chapter 189'},
         ]
     };
-  }  
-  
-  onSharePress = () => Share.share(shareOptions);
-  goToDetailChapter = () => this.props.navigation.navigate('DetailsChapter')
-  goToPrevScreen = () =>  this.props.navigation.goBack();
-  
+  }
+
+  goToEditChapter = () => this.props.navigation.navigate('EditChapter')
+  goToAddPageScreen = () => this.props.navigation.navigate('')
+
   render() {
     return (
-      <View style={{flex:1}}>
+        <View style={{flex:1}}>
         <Header style ={{backgroundColor:'light-gray'}}>
           <Left>
             <TouchableOpacity transparent>
@@ -90,15 +80,16 @@ export default class Details extends Component {
             <Text style={styles.label}>Manga's Chapters</Text>
           </View>
           <View style={{padding:10}}>
-            <View style={{flexDirection:'row',marginBottom:5}}>
+            <TouchableOpacity style={{flexDirection:'row',marginBottom:5}}
+            onPress={this.goToEditChapter}>
             <Image
               style={{width:30, height:30, marginRight:10}} 
               source={require('../assets/icon/chapter.png')}/>
                 <View>
-                <Text onPress={this.goToDetailChapter}>Chapter 110 : Lorem ipsum dolor sit amet</Text>
-                <Text style={{color:'#7f8c8d'}}>16 August 2090</Text>
-              </View>
-            </View>
+                 <Text >Chapter 110 : Lorem ipsum dolor sit amet</Text>
+                 <Text style={{color:'#7f8c8d'}}>16 August 2090</Text>
+                </View>
+            </TouchableOpacity>
             <View style={{flexDirection:'row',marginBottom:5}}>
             <Image
               style={{width:30, height:30, marginRight:10}} 

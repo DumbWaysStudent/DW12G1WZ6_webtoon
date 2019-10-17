@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text,StyleSheet,Image,TouchableOpacity,Dimensions } from 'react-native';
+import { View, Text,StyleSheet,Image,TouchableOpacity,Dimensions,AsyncStorage } from 'react-native';
 import { 
   Card,
   
@@ -10,6 +10,7 @@ import {
     CardItem,
     Body,
    } from 'native-base';
+import axios from 'axios'
 
    const width = Dimensions.get('window').width*0.95;
    const height = Dimensions.get('window').height*0.87;
@@ -39,15 +40,18 @@ export default class Login extends Component {
       const emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
       return emailFormat.test(username)&&this.state.inputPassword!=null
   }
-  authentication=()=>{
+  authentication= async ()=>{
     const inputUsername = this.state.inputUsername
     const inputPassword = this.state.inputPassword
-    inputUsername==='rizky@gmail.com'&&inputPassword==='rizky'?
-    this.props.navigation.navigate('Home')
-    :
-    alert('Gagal Login')
+    const response = await axios.post('http://192.168.73.2:5000/mangaky/login',{
+      email : inputUsername,
+      password : inputPassword
+    })
+     await AsyncStorage.setItem('user-token',response.data.token)
+     const token = await AsyncStorage.getItem('user-token')
+     this.props.navigation.navigate('Home')
+     console.log(token) 
   }
-
   render() {
     return (
       <View style = { styles.container }>
@@ -58,7 +62,7 @@ export default class Login extends Component {
             <Item>
                 <Input
                     autoCapitalize ='none'
-                    placeholder ='Masukan Email'
+                    placeholder ='Masukan Emai'
                     onChangeText={text => this.setState({inputUsername : text})}
                 />
             </Item>

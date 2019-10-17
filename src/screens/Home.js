@@ -8,7 +8,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 const width = Dimensions.get('window').width;
 
 
-
 export default class Home extends Component {
   constructor(props) {
     super(props);
@@ -48,16 +47,20 @@ export default class Home extends Component {
             </View>
           )}
           images={[
-            'https://akcdn.detik.net.id/community/media/visual/2019/04/03/dac43146-7dd4-49f4-89ca-d81f57b070fc.jpeg?w=770&q=90',
+            'https://avt.mkklcdnv3.com/avatar_225/21424-ls917810.jpg',
             'https://akcdn.detik.net.id/community/media/visual/2019/04/03/dac43146-7dd4-49f4-89ca-d81f57b070fc.jpeg?w=770&q=90',
             'https://akcdn.detik.net.id/community/media/visual/2019/04/03/dac43146-7dd4-49f4-89ca-d81f57b070fc.jpeg?w=770&q=90'
         ]}/>
         </View>
         <Card>
-          <CardItem>
-            <Body>
-            <Label style={styles.label}>Favorites</Label>
-            <View style={{backgroundColor:'grey',height:1,width:width*0.86}}/>
+          <View style={{flexDirection:"row"}}>
+            <View style={{backgroundColor: '#273c75', alignSelf:'baseline'}}>
+              <Text style={styles.label}>Your Favorite Manga</Text>
+            </View>
+            <Image
+              style={{width:30, height:30, marginLeft:180}} 
+              source={require('../assets/icon/bookmark.png')}/>
+          </View>
               <FlatList
                 showsHorizontalScrollIndicator ={false}
                 style={styles.horizontalFlatlist}
@@ -74,37 +77,30 @@ export default class Home extends Component {
                 }
                 keyExtractor = {(item,index)=>index.toString()}
               />
-            </Body>
-          </CardItem>
         </Card>
       
 
         <View style={{marginBottom : 20}}>
           <Card>
-            <CardItem>
-              <Body>
-              <Label style={{fontWeight:'bold', marginBottom :10}}>All</Label>
+            <View style={{backgroundColor: '#273c75', alignSelf:'baseline'}}>
+              <Text style={styles.label}>Recently Updated Manga</Text>
+            </View>
               {this.state.listManga.map((item,index)=>{
                 return(
                   <TouchableOpacity key={index} 
-                  style={{flexDirection:"row"}}
+                  style={{flexDirection:"row",padding : 10}}
                   onPress={this.toDetailScreen}>
                     <Image
                       style={styles.coverAll}
                       source={item.image}/>
                       <View>
-                        <Text>{item.title}</Text>
+                        <Text style={{fontWeight:'bold'}}>{item.title}</Text>
                         <Text>{item.chapter}</Text>
-                        <TouchableOpacity style={styles.buttonRead}>
-                          <Text style={{color:'white'}}>Favorites</Text>
-                        </TouchableOpacity>
                       </View>
                   </TouchableOpacity>
                   )
                 }
               )}
-              </Body>
-            </CardItem>
           </Card>
           
         </View>
@@ -116,7 +112,7 @@ export default class Home extends Component {
 }
 const styles = StyleSheet.create({
   horizontalFlatlist:{
-    marginTop: 10,
+    padding : 10
   },
   coverMangaFav:{
     height:100,
@@ -141,9 +137,8 @@ const styles = StyleSheet.create({
     marginTop: 10 ,
     backgroundColor :'orange'},
   label:{
-    color:'#192a56',
+    color:'white',
     fontWeight:'bold',
-    marginBottom :5, 
-    marginTop:5}
+    padding :10}
 
 })

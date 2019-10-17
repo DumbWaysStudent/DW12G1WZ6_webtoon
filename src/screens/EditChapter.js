@@ -7,9 +7,9 @@ export default class EditChapter extends Component {
     super(props);
     this.state = {
       listManga:[
-        {date:'15 Agustus 2028', image:require('../assets/cover/boku.jpg'), chapter:'Chapter 190'},
-        {date:'14 Agustus 2028', image:require('../assets/cover/cover_onepiece.jpg'),chapter:'Chapter 189'},
-        {date:'13 Agustus 2028', image:require('../assets/cover/sunarto.jpg'),chapter:'Chapter 188'}],
+        {date:'15 Agustus 2028', image:require('../assets/cover/boku.jpg'), chapter:'page 1'},
+        {date:'14 Agustus 2028', image:require('../assets/cover/cover_onepiece.jpg'),chapter:'page 2'},
+        {date:'13 Agustus 2028', image:require('../assets/cover/sunarto.jpg'),chapter:'page 3'}],
       input :''
     };
   }
@@ -76,8 +76,10 @@ export default class EditChapter extends Component {
             style={styles.coverMangaFav}
             source={item.image}/>
             <View>
-              <Text style={styles.titleMangaFav}>{item.chapter}</Text>
-              <Text style={styles.titleMangaFav}>{item.date}</Text>
+              <Text style={styles.page}>{item.chapter}</Text>
+              <TouchableOpacity style={styles.buttonDeletePage}onPress={this.goToEditScreen}>
+                <Icon name='trash' style={{color:'white',marginLeft:10}}/>
+              </TouchableOpacity>
             </View>
           </TouchableOpacity>
           }
@@ -87,7 +89,7 @@ export default class EditChapter extends Component {
           <TouchableOpacity style={styles.button}>
             <Text style={{color:'white'}}
             onPress ={this.addManga}>
-              Add Chapter
+              Add Page
             </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.buttonDel} onPress={this.deleteManga}>
@@ -135,4 +137,16 @@ const styles = StyleSheet.create({
     backgroundColor : 'red',
     justifyContent : 'center',
     },
+    buttonDeletePage :{
+      marginTop:12,
+      width:40,
+      height:40,
+      flexDirection:'row',
+      borderRadius : 5, 
+      backgroundColor:'#ee5253',
+      alignItems:'center'
+    }, 
+  page:{
+    fontWeight:'bold'
+  }
 })

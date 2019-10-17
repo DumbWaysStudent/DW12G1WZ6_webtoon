@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text,Image,Dimensions,StyleSheet,TouchableOpacity,FlatList,Share } from 'react-native';
-import { Header, Left, Body, Right, Icon,Card, CardItem } from 'native-base';
+import { View, Text,TouchableOpacity,FlatList,Image,StyleSheet,Dimensions } from 'react-native';
+import { Header, Left, Body, Right, Icon, CardItem,Card } from 'native-base';
 
 const fitScreen = Dimensions.get('window').width;
 
-const shareOptions = {
-  title: 'Title',
-  message: 'Message to share', // Note that according to the documentation at least one of "message" or "url" fields is required
-  url: 'www.example.com',
-  subject: 'Subject'
-};
-
-export default class Details extends Component {
+export default class ManageManga extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,16 +12,14 @@ export default class Details extends Component {
           {date:'14 Agustus 2028', image:require('../assets/cover/cover_onepiece.jpg'),chapter:'Chapter 189'},
         ]
     };
-  }  
+  }
   
-  onSharePress = () => Share.share(shareOptions);
-  goToDetailChapter = () => this.props.navigation.navigate('DetailsChapter')
-  goToPrevScreen = () =>  this.props.navigation.goBack();
-  
+  goToChapterScreen = ()=>this.props.navigation.navigate('Chapters')
+
   render() {
     return (
-      <View style={{flex:1}}>
-        <Header style ={{backgroundColor:'light-gray'}}>
+      <View>
+        <Header style ={{backgroundColor:'#0984e3'}}>
           <Left>
             <TouchableOpacity transparent>
               <Icon name='arrow-back'
@@ -36,18 +27,13 @@ export default class Details extends Component {
             </TouchableOpacity>
           </Left>
           <Body>
-              <Text>One Piece</Text>
+              <Text>Komiky</Text>
+              <Text>My Manga Creation</Text>
           </Body>
-          <Right>
-            <TouchableOpacity transparent>
-              <Icon name='share' 
-              onPress={this.onSharePress}/>
-            </TouchableOpacity>
-          </Right>
+          <Right></Right>
         </Header>
-        
-        <Card style={{margin:10}}>
-            <FlatList
+        <Card style={{width:340,alignSelf:'center'}}>
+        <FlatList
               style={{padding:10}}
               data={this.state.listManga}
               renderItem={({item})=>
@@ -57,7 +43,11 @@ export default class Details extends Component {
                 style={styles.imageChapter}
                 source={item.image}/>
                 <View >
-                  <Text style={styles.titleChapter}>ONE PIECE</Text>
+                  <Text style={styles.titleChapter}>Manage Manga</Text>
+                   <View style={{flexDirection:'row'}}>
+                    <Text style={styles.dateChapter}>TITLE : </Text>
+                    <Text style={styles.dateChapter}>ONE PIECE </Text>
+                  </View>
                   <View style={{flexDirection:'row'}}>
                     <Text style={styles.dateChapter}>AUTHOR(S) : </Text>
                     <Text style={styles.dateChapter}>DEDE IKI </Text>
@@ -74,43 +64,21 @@ export default class Details extends Component {
                     <Text style={styles.dateChapter}>STATUS : </Text>
                     <Text style={styles.dateChapter}>ONGOING </Text>
                   </View>
-                  <TouchableOpacity style={styles.buttonFavorite}>
-                    <Icon name='star' style={{marginLeft: 10,color:'white'}}/>
-                    <Text style={{padding :10, color:'white' }}>Mark As Favorite</Text>
-                  </TouchableOpacity>
                 </View>
               </TouchableOpacity>
               }
               keyExtractor = {(item,index)=>index.toString()}
             />
-       
         </Card>
-        <Card style={styles.card}>
-          <View style={{backgroundColor: '#273c75', alignSelf:'baseline'}}>
-            <Text style={styles.label}>Manga's Chapters</Text>
-          </View>
-          <View style={{padding:10}}>
-            <View style={{flexDirection:'row',marginBottom:5}}>
-            <Image
-              style={{width:30, height:30, marginRight:10}} 
-              source={require('../assets/icon/chapter.png')}/>
-                <View>
-                <Text onPress={this.goToDetailChapter}>Chapter 110 : Lorem ipsum dolor sit amet</Text>
-                <Text style={{color:'#7f8c8d'}}>16 August 2090</Text>
-              </View>
-            </View>
-            <View style={{flexDirection:'row',marginBottom:5}}>
-            <Image
-              style={{width:30, height:30, marginRight:10}} 
-              source={require('../assets/icon/chapter.png')}/>
-                <View>
-                <Text onPress={this.goToDetailChapter}>Chapter 110 : Lorem ipsum dolor sit amet</Text>
-                <Text style={{color:'#7f8c8d'}}>16 August 2090</Text>
-              </View>
-            </View>
+        <TouchableOpacity 
+              style={styles.button}
+              onPress={this.goToMangaCreation}>
+              <Text style={{padding:20,color:'white'}}>Edit Your Manga</Text>
+              <Icon name='arrow-dropright' style={styles.nextIcon} onPress={this.goToPrevScreen}/>
+            </TouchableOpacity>
             
-          </View>
-        </Card>
+            <TouchableOpacity style={styles.buttonLogout} onPress={this.goToChapterScreen}>
+                <Text style={{padding:20,color:'white'}}>Manage Chapter</Text></TouchableOpacity>
       </View>
     );
   }
@@ -147,6 +115,30 @@ const styles = StyleSheet.create({
       padding :10},
     card:{
       margin:10
-    }
+    },
+    button:{
+        borderRadius:20,
+        backgroundColor:'#273c75',
+        flexDirection:"row",
+        marginTop :1,
+        width: fitScreen*0.97,
+        justifyContent : "space-between",
+        alignSelf:'center'
+      },
+      buttonLogout:{
+        borderRadius:20,
+        backgroundColor:'#e84118',
+        flexDirection:"row",
+        marginTop :1,
+        width: fitScreen*0.97,
+        justifyContent : "space-between",
+        alignSelf:'center'
+      },
+      nextIcon:{
+        color: 'white',
+        alignSelf:'flex-end',
+        margin:10
+      }
+    
     
 })
