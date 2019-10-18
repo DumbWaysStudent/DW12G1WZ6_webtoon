@@ -2,7 +2,7 @@ const sequelize = require('sequelize')
 const models = require ('../models')
 const mangas = models.manga
 const chapters = models.chapter
-const imageChapters = models.image
+const lastestChapters = models.lastestChapters
 const Op = sequelize.Op
 
 //manga
@@ -14,6 +14,14 @@ exports.index =async (req,res) => {
     res.send(dataMangas)
 }
 
+exports.searchMangas = async ( req,res) =>{
+    const dataMangas = await mangas.findAll({
+        where:{
+            id:req.params.mangaId
+        }
+    })
+    res.send(dataMangas)
+}
 
 //tampil manga yg dibuat user
 exports.myCreation = async (req,res) =>{
@@ -36,22 +44,20 @@ exports.searchTitle = async (req,res) => {
 }
 exports.addMangas = async (req,res) => {
     const {userId} = req.params
-    const {title,genre,image} = req.body
+    const {title,genre,cover} = req.body
     const dataManga = await mangas.create({
         title,
         genre,
-        image,
+        cover,
         author : userId
     })
     res.send(dataManga)
 }
 exports.updateManga = async (req,res) => {
-    const userId = req.params.userId
     const mangaId = req.params.mangaId
     const data = req.body
     const dataManga = await mangas.update(data,{
         where:{
-            author: userId,
             id : mangaId 
         }
     })
@@ -125,7 +131,10 @@ exports.deleteChapter = async (req,res) =>{
     res.send(chapterId)
 
 }
-
+exports.getLastestChapters = async (req,res) => {
+    const dataChapter = await lastestChapters.findAll()
+    res.send(dataChapter)
+}
 // images chapter
 
 exports.createImageChapter = async (req,res) =>{

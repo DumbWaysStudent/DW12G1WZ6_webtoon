@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text,Image,Dimensions,FlatList,StyleSheet,ScrollView } from 'react-native';
+import jwt_decode from 'jwt-decode';
+import { View, Text,Image,Dimensions,FlatList,StyleSheet,AsyncStorage,ScrollView } from 'react-native';
 import ImageSlider from 'react-native-image-slider';
 import { Form, Item, Input, Label,Icon,  Card, CardItem, Body  } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
+import axios from 'axios'
+import jwt from 'react-native-pure-jwt'
 
 const width = Dimensions.get('window').width;
 
@@ -12,16 +14,47 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listManga:[
-        {title:'Boku No Pico', image:require('../assets/cover/boku.jpg'), chapter:'Chapter 190'},
-        {title:'One Piece', image:require('../assets/cover/cover_onepiece.jpg'),chapter:'Chapter 123'},
-        {title:'Sunarto', image:require('../assets/cover/sunarto.jpg'),chapter:'Chapter 450'},
-        {title:'Bocah Laknat', image:require('../assets/cover/bocahLaknat.jpg'),chapter:'Chapter 19'}],
+      listManga:[],
+      latestChapters:[]
     };
   }
 
   toDetailScreen=()=>{
     this.props.navigation.navigate('Details')
+  }
+
+  getLatestMangas = () => {
+    axios.get('http://192.168.73.2:5000/mangaky/chapter/latest')
+    .then(res =>{
+      const result = res.data
+      this.setState({
+        latestChapters:[...result]
+      })
+    })
+  }
+
+  getMyFavoriteMangas = async() => {
+    const token = await AsyncStorage.getItem('user-token')
+    const id = jwt_decode(token)
+    console.log(id.userId)
+    axios.get(`http://192.168.73.2:5000/mangaky/manga/myfavorites/${id.userId}`)
+    .then(res =>{
+      const result = res.data
+      this.setState({
+        listManga:[...result]
+      })
+    })
+  }
+ 
+  componentDidMount(){
+    axios.get('http://192.168.73.2:5000/mangaky/chapter/latest')
+    .then(res =>{
+      const result = res.data
+      this.setState({
+        latestChapters:[...result]
+      })
+    })
+    this.getMyFavoriteMangas()
   }
 
   render() {
@@ -71,7 +104,7 @@ export default class Home extends Component {
                   <Image
                   onPress
                   style={styles.coverMangaFav}
-                  source={item.image}/>
+                  source={{uri:item.cover}}/>
                   <Text style={styles.titleMangaFav}>{item.title}</Text>
                 </TouchableOpacity>
                 }
@@ -85,17 +118,18 @@ export default class Home extends Component {
             <View style={{backgroundColor: '#273c75', alignSelf:'baseline'}}>
               <Text style={styles.label}>Recently Updated Manga</Text>
             </View>
-              {this.state.listManga.map((item,index)=>{
+              {this.state.latestChapters.map((item,index)=>{
                 return(
                   <TouchableOpacity key={index} 
                   style={{flexDirection:"row",padding : 10}}
                   onPress={this.toDetailScreen}>
+                    {/* {console.log(item.cover)} */}
                     <Image
                       style={styles.coverAll}
-                      source={item.image}/>
+                      source={{uri: item.cover}}/>
                       <View>
                         <Text style={{fontWeight:'bold'}}>{item.title}</Text>
-                        <Text>{item.chapter}</Text>
+                        <Text>Chapter {item.number}</Text>
                       </View>
                   </TouchableOpacity>
                   )

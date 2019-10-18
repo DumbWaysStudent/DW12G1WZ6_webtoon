@@ -24,18 +24,21 @@ app.group("/mangaky",(router) => {
     router.delete('/manga/delete/:mangaId',authenticating,mangasController.deleteManga)//hapus manga
     router.get('/manga/search/:title',authenticating,mangasController.searchTitle)// cari manga berdassarkan judul
     router.get('/manga/read/manga/:mangaId/chapter/:idChapter',authenticating,imagesController.show)// baca manga
+    router.get('/manga/search/:mangaId',mangasController.searchMangas)// cari manga berdasarkan id
 
     // favorite API
     router.get('/manga/favorite/:id',authenticating,favoritesController.show)// tampil manga favorit user
     router.post('manga/favorite/add/:idUser',authenticating,favoritesController.addFavorite)// tambah manga favorit user
     router.delete('/manga/favorite/delete/user/:idUser/manga/:idManga',authenticating,favoritesController.deleteFavorite)// hapus favorit manga user
-    
+    router.get('/manga/myfavorites/:idUser',favoritesController.myFavorites)
+
     // chapter API
     router.get('/chapter/manga/:mangaId',authenticating,mangasController.showChapter)// tampil semua chapter manga
     router.post('/chapter/create/:mangaId',authenticating,mangasController.createChapter)// buat chapter manga
     router.put('/chapter/update/manga/:mangaId/chapter/:chapterId',authenticating,mangasController.updateChapter)// update chapter manga
     router.delete('/chapter/delete/:chapterId',authenticating,mangasController.deleteChapter)// hapus chapter manga
-    
+    router.get('/chapter/latest',mangasController.getLastestChapters)
+
     // image API
     router.post('chapter/mangaId/:id/image/add',authenticating,mangasController.createImageChapter)// tambah page chapter
     router.delete('chapter/image/:id',authenticating,mangasController.deleteImageChapter)// hapus page chapter

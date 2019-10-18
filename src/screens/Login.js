@@ -50,7 +50,6 @@ export default class Login extends Component {
      await AsyncStorage.setItem('user-token',response.data.token)
      const token = await AsyncStorage.getItem('user-token')
      this.props.navigation.navigate('Home')
-     console.log(token) 
   }
   render() {
     return (
