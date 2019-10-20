@@ -61,7 +61,7 @@ export default class Login extends Component {
             <Item>
                 <Input
                     autoCapitalize ='none'
-                    placeholder ='Masukan Emai'
+                    placeholder ='Masukan Email'
                     onChangeText={text => this.setState({inputUsername : text})}
                 />
             </Item>

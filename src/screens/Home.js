@@ -5,12 +5,13 @@ import ImageSlider from 'react-native-image-slider';
 import { Form, Item, Input, Label,Icon,  Card, CardItem, Body  } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios'
-import jwt from 'react-native-pure-jwt'
+import {connect} from 'react-redux'
+import * as actionChapters from './../redux/actions/actionsChapters'
 
 const width = Dimensions.get('window').width;
 
 
-export default class Home extends Component {
+class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,38 +24,13 @@ export default class Home extends Component {
     this.props.navigation.navigate('Details')
   }
 
-  getLatestMangas = () => {
-    axios.get('http://192.168.73.2:5000/mangaky/chapter/latest')
-    .then(res =>{
-      const result = res.data
-      this.setState({
-        latestChapters:[...result]
-      })
-    })
-  }
 
-  getMyFavoriteMangas = async() => {
-    const token = await AsyncStorage.getItem('user-token')
-    const id = jwt_decode(token)
-    console.log(id.userId)
-    axios.get(`http://192.168.73.2:5000/mangaky/manga/myfavorites/${id.userId}`)
-    .then(res =>{
-      const result = res.data
-      this.setState({
-        listManga:[...result]
-      })
-    })
-  }
  
   componentDidMount(){
-    axios.get('http://192.168.73.2:5000/mangaky/chapter/latest')
-    .then(res =>{
-      const result = res.data
-      this.setState({
-        latestChapters:[...result]
-      })
-    })
-    this.getMyFavoriteMangas()
+
+    this.props.getLatestChapters()
+    console.log(this.props.chaptersLocal.chapters)
+   
   }
 
   render() {
@@ -118,12 +94,12 @@ export default class Home extends Component {
             <View style={{backgroundColor: '#273c75', alignSelf:'baseline'}}>
               <Text style={styles.label}>Recently Updated Manga</Text>
             </View>
-              {this.state.latestChapters.map((item,index)=>{
+              {this.props.chaptersLocal.chapters.map((item,index)=>{
                 return(
                   <TouchableOpacity key={index} 
                   style={{flexDirection:"row",padding : 10}}
                   onPress={this.toDetailScreen}>
-                    {/* {console.log(item.cover)} */}
+                 
                     <Image
                       style={styles.coverAll}
                       source={{uri: item.cover}}/>
@@ -144,6 +120,18 @@ export default class Home extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    chaptersLocal: state.chapters
+  }
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    getLatestChapters: () => dispatch(actionChapters.getLatestChapters())
+  }
+}
+
 const styles = StyleSheet.create({
   horizontalFlatlist:{
     padding : 10
@@ -176,3 +164,8 @@ const styles = StyleSheet.create({
     padding :10}
 
 })
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home);
