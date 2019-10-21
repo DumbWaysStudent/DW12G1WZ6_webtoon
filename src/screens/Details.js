@@ -25,6 +25,10 @@ export default class Details extends Component {
   goToDetailChapter = () => this.props.navigation.navigate('DetailsChapter')
   goToPrevScreen = () =>  this.props.navigation.goBack();
   
+  componentDidMount(){
+    const dataManga = this.props.navigation.state.params
+    console.log(dataManga)
+  }
   render() {
     return (
       <View style={{flex:1}}>

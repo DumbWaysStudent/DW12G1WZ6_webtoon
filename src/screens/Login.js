@@ -10,13 +10,14 @@ import {
     CardItem,
     Body,
    } from 'native-base';
-import axios from 'axios'
+import * as actionAuthentication from '../redux/actions/actionsAuthentication'
+import {connect} from 'react-redux'
 
    const width = Dimensions.get('window').width*0.95;
    const height = Dimensions.get('window').height*0.87;
 
 
-export default class Login extends Component {
+class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,16 +41,21 @@ export default class Login extends Component {
       const emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
       return emailFormat.test(username)&&this.state.inputPassword!=null
   }
-  authentication= async ()=>{
-    const inputUsername = this.state.inputUsername
-    const inputPassword = this.state.inputPassword
-    const response = await axios.post('http://192.168.73.2:5000/mangaky/login',{
-      email : inputUsername,
-      password : inputPassword
+  authentication= async() =>{
+  await this.props.authentication({
+      inputUsername : this.state.inputUsername,
+      inputPassword : this.state.inputPassword
     })
-     await AsyncStorage.setItem('user-token',response.data.token)
+    const data = this.props.authenticationLocal.user.token
+    console.log(data)
+    // const response = await axios.post('http://192.168.73.2:5000/mangaky/login',{
+    //   email : inputUsername,
+    //   password : inputPassword
+    // })
+     await AsyncStorage.setItem('user-token',data)
      const token = await AsyncStorage.getItem('user-token')
      this.props.navigation.navigate('Home')
+    
   }
   render() {
     return (
@@ -95,6 +101,18 @@ export default class Login extends Component {
     );
     }
 }
+
+const mapStateToProps = state => {
+  return {
+    authenticationLocal: state.authentication // reducers/index.js
+  }
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    authentication: (params) => dispatch(actionAuthentication.login(params))
+  }
+}
+
 const styles = StyleSheet.create({
   container:
   {   
@@ -151,3 +169,8 @@ const styles = StyleSheet.create({
     height: 70
   }
 });
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login);

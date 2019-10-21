@@ -7,6 +7,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios'
 import {connect} from 'react-redux'
 import * as actionChapters from './../redux/actions/actionsChapters'
+import * as actionMyFavorites from './../redux/actions/actionsMyFavorites'
 
 const width = Dimensions.get('window').width;
 
@@ -20,18 +21,20 @@ class Home extends Component {
     };
   }
 
-  toDetailScreen=()=>{
-    this.props.navigation.navigate('Details')
+  toDetailScreen=(item)=>{
+    this.props.navigation.navigate('Details',item.manga)
   }
+  componentDidMount= async() =>{
 
-
- 
-  componentDidMount(){
-
-    this.props.getLatestChapters()
-    console.log(this.props.chaptersLocal.chapters)
+    await this.props.getLatestChapters()
+    
+    const token = await AsyncStorage.getItem('user-token')
+    const id = jwt_decode(token)
    
+    await this.props.getMyFavorites(id.userId)
+    console.log(this.props.myFavoritesLocal)
   }
+
 
   render() {
     return (
@@ -74,14 +77,14 @@ class Home extends Component {
                 showsHorizontalScrollIndicator ={false}
                 style={styles.horizontalFlatlist}
                 horizontal={true}
-                data={this.state.listManga}
+                data={this.props.myFavoritesLocal.myFavorites}
                 renderItem={({item})=>
-                <TouchableOpacity onPress={this.toDetailScreen}>
+                <TouchableOpacity onPress={()=>this.toDetailScreen(item)}>
                   <Image
                   onPress
                   style={styles.coverMangaFav}
-                  source={{uri:item.cover}}/>
-                  <Text style={styles.titleMangaFav}>{item.title}</Text>
+                  source={{uri:item.mangas.cover}}/>
+                  <Text style={styles.titleMangaFav}>{item.mangas.title}</Text>
                 </TouchableOpacity>
                 }
                 keyExtractor = {(item,index)=>index.toString()}
@@ -102,9 +105,9 @@ class Home extends Component {
                  
                     <Image
                       style={styles.coverAll}
-                      source={{uri: item.cover}}/>
+                      source={{uri: item.mangas.cover}}/>
                       <View>
-                        <Text style={{fontWeight:'bold'}}>{item.title}</Text>
+                        <Text style={{fontWeight:'bold'}}>{item.mangas.title}</Text>
                         <Text>Chapter {item.number}</Text>
                       </View>
                   </TouchableOpacity>
@@ -123,12 +126,14 @@ class Home extends Component {
 
 const mapStateToProps = state => {
   return {
-    chaptersLocal: state.chapters
+    chaptersLocal: state.chapters, // redux/reducer/index.js
+    myFavoritesLocal : state.myFavorites
   }
 }
 const mapDispatchToProps = dispatch => {
   return {
-    getLatestChapters: () => dispatch(actionChapters.getLatestChapters())
+    getLatestChapters: () => dispatch(actionChapters.getLatestChapters()), // redux/action
+    getMyFavorites : (params) => dispatch(actionMyFavorites.getMyFavorites(params))
   }
 }
 

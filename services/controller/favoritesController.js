@@ -1,12 +1,17 @@
 const models = require ('../models')
 const favorites = models.favorite
 const myFavorites = models.myFavorites
+const manga =models.manga
 
 exports.show = async (req,res) =>{
     const dataFavorite = await favorites.findAll({
         where:{
             user:req.params.id
-        }
+        },
+        include: [{
+            model: manga,
+            as: "mangas"
+        }],
     })
     res.send(dataFavorite)
 }
@@ -27,12 +32,4 @@ exports.deleteFavorite = async (req,res) =>{
         }
     })
     req.send(user)
-}
-exports.myFavorites = async (req,res) =>{
-    const dataFavorite = await myFavorites.findAll({
-       where:{
-           user : req.params.idUser
-       }
-    })
-    res.send(dataFavorite)
 }

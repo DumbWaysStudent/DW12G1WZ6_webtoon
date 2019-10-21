@@ -132,7 +132,17 @@ exports.deleteChapter = async (req,res) =>{
 
 }
 exports.getLastestChapters = async (req,res) => {
-    const dataChapter = await lastestChapters.findAll()
+    const dataChapter = await chapters.findAll({
+        include: [{
+            model: mangas,
+            as: "mangas"
+        }],
+        order: [
+            ['createdAt', 'DESC']
+        ]
+    })
+        
+    
     res.send(dataChapter)
 }
 // images chapter

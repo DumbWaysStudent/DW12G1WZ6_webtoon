@@ -10,7 +10,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   chapter.associate = function(models) {
     // associations can be defined here
-  
+    chapter.belongsTo(models.manga,{
+      as: 'mangas',
+      foreignKey : 'manga'
+    })
   };
   return chapter;
 };

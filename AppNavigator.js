@@ -61,7 +61,7 @@ const MainApp = createBottomTabNavigator(
 const AppNavigator = createStackNavigator({
    
     Login : {
-      screen :MainApp,
+      screen :Login,
       navigationOptions : {
       header:null
       }

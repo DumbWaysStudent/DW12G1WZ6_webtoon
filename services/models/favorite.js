@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   favorite.associate = function(models) {
     // associations can be defined here
     favorite.belongsTo(models.users,{
-      as : 'uri',
+      as : 'author',
       foreignKey : 'user'
     }),
     favorite.belongsTo(models.manga,{

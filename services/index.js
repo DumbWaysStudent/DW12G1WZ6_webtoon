@@ -27,10 +27,10 @@ app.group("/mangaky",(router) => {
     router.get('/manga/search/:mangaId',mangasController.searchMangas)// cari manga berdasarkan id
 
     // favorite API
-    router.get('/manga/favorite/:id',authenticating,favoritesController.show)// tampil manga favorit user
+    router.get('/manga/favorite/:id',favoritesController.show)// tampil manga favorit user
     router.post('manga/favorite/add/:idUser',authenticating,favoritesController.addFavorite)// tambah manga favorit user
     router.delete('/manga/favorite/delete/user/:idUser/manga/:idManga',authenticating,favoritesController.deleteFavorite)// hapus favorit manga user
-    router.get('/manga/myfavorites/:idUser',favoritesController.myFavorites)
+
 
     // chapter API
     router.get('/chapter/manga/:mangaId',authenticating,mangasController.showChapter)// tampil semua chapter manga
