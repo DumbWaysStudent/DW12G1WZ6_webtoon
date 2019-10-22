@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text,Image,Dimensions,StyleSheet,TouchableOpacity,FlatList,Share } from 'react-native';
+import { View, Text,Image,Dimensions,StyleSheet,TouchableOpacity,FlatList,Share,ScrollView,AsyncStorage} from 'react-native';
 import { Header, Left, Body, Right, Icon,Card, CardItem } from 'native-base';
+
+import {connect} from 'react-redux'
+import * as actionChapters from './../redux/actions/actionsChapters'
+import * as actionGetDetailManga from './../redux/actions/actionGetDetailManga'
+import * as actionGetChapterMangas from './../redux/actions/actionGetChapterMangas'
 
 const fitScreen = Dimensions.get('window').width;
 
@@ -11,27 +16,47 @@ const shareOptions = {
   subject: 'Subject'
 };
 
-export default class Details extends Component {
+class Details extends Component {
   constructor(props) {
     super(props);
     this.state = {
         listManga:[
-          {date:'14 Agustus 2028', image:require('../assets/cover/cover_onepiece.jpg'),chapter:'Chapter 189'},
+          
         ]
     };
   }  
   
-  onSharePress = () => Share.share(shareOptions);
-  goToDetailChapter = () => this.props.navigation.navigate('DetailsChapter')
+  onSharePress = () => Share.share(shareOptions)
+
+  goToDetailChapter = (idManga,idChapter) =>{
+    const param ={
+      manga: idManga,
+      chapter: idChapter
+    } 
+    this.props.navigation.navigate('DetailsChapter',param)
+  } 
+
   goToPrevScreen = () =>  this.props.navigation.goBack();
   
-  componentDidMount(){
+  componentDidMount= async()=>{
     const dataManga = this.props.navigation.state.params
-    console.log(dataManga)
+    const token = await AsyncStorage.getItem('user-token')
+    this.props.getDetailManga(dataManga)
+    this.props.getChapterMangas(dataManga,token)
   }
+
+  formatDate = (time) => {
+    var dt = new Date(time);
+    var mo = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var string = `${dt.getDate()} ${mo[dt.getMonth()]} ${dt.getFullYear()}`
+    return string;
+}
+
   render() {
+    const dataManga = this.props.getDetailMangaLocal.detailManga
+    const chapterMangas = this.props.getChapterMangasLocal.chapterMangas
     return (
-      <View style={{flex:1}}>
+      <ScrollView style={{padding : 5}}>
         <Header style ={{backgroundColor:'light-gray'}}>
           <Left>
             <TouchableOpacity transparent>
@@ -51,28 +76,33 @@ export default class Details extends Component {
         </Header>
         
         <Card style={{margin:10}}>
-            <FlatList
-              style={{padding:10}}
-              data={this.state.listManga}
-              renderItem={({item})=>
               <TouchableOpacity style={{flexDirection:'row'}}
                 onPress={this.goToDetailChapter}>
                 <Image
                 style={styles.imageChapter}
-                source={item.image}/>
+                source={{uri : dataManga.length >0?dataManga[0].cover:null}}
+                />
                 <View >
-                  <Text style={styles.titleChapter}>ONE PIECE</Text>
+                  <Text style={styles.titleChapter}>
+                    {dataManga.length >0?dataManga[0].title:null}
+                  </Text>
                   <View style={{flexDirection:'row'}}>
                     <Text style={styles.dateChapter}>AUTHOR(S) : </Text>
-                    <Text style={styles.dateChapter}>DEDE IKI </Text>
+                    <Text style={styles.dateChapter}>
+                      {dataManga.length >0?dataManga[0].users.name:null} 
+                    </Text>
                   </View>
                   <View style={{flexDirection:'row'}}>
                     <Text style={styles.dateChapter}>GENRE : </Text>
-                    <Text style={styles.dateChapter}>ADVENTURE </Text>
+                    <Text style={styles.dateChapter}>
+                      {dataManga.length >0?dataManga[0].genre:null}
+                    </Text>
                   </View>
                   <View style={{flexDirection:'row'}}>
                     <Text style={styles.dateChapter}>CREATED AT : </Text>
-                    <Text style={styles.dateChapter}>2019-10-18 </Text>
+                    <Text style={styles.dateChapter}>
+                      {dataManga.length >0?this.formatDate(dataManga[0].createdAt):null}
+                    </Text>
                   </View>
                   <View style={{flexDirection:'row'}}>
                     <Text style={styles.dateChapter}>STATUS : </Text>
@@ -84,41 +114,65 @@ export default class Details extends Component {
                   </TouchableOpacity>
                 </View>
               </TouchableOpacity>
-              }
-              keyExtractor = {(item,index)=>index.toString()}
-            />
-       
         </Card>
+
         <Card style={styles.card}>
+          <View style={{backgroundColor: '#273c75', alignSelf:'baseline'}}>
+            <Text style={styles.label}>Manga's Synopsis</Text>
+          </View>
+          <View style={{padding:10}}>
+            <Text>
+            {dataManga.length >0?dataManga[0].synopsis:null}
+            </Text>
+         
+          </View>
+        </Card>
+
+        <Card style={{marginBottom:30}}>
           <View style={{backgroundColor: '#273c75', alignSelf:'baseline'}}>
             <Text style={styles.label}>Manga's Chapters</Text>
           </View>
           <View style={{padding:10}}>
-            <View style={{flexDirection:'row',marginBottom:5}}>
-            <Image
-              style={{width:30, height:30, marginRight:10}} 
-              source={require('../assets/icon/chapter.png')}/>
-                <View>
-                <Text onPress={this.goToDetailChapter}>Chapter 110 : Lorem ipsum dolor sit amet</Text>
-                <Text style={{color:'#7f8c8d'}}>16 August 2090</Text>
-              </View>
-            </View>
-            <View style={{flexDirection:'row',marginBottom:5}}>
-            <Image
-              style={{width:30, height:30, marginRight:10}} 
-              source={require('../assets/icon/chapter.png')}/>
-                <View>
-                <Text onPress={this.goToDetailChapter}>Chapter 110 : Lorem ipsum dolor sit amet</Text>
-                <Text style={{color:'#7f8c8d'}}>16 August 2090</Text>
-              </View>
-            </View>
-            
+            <FlatList
+              data={chapterMangas}
+              renderItem={({item})=>
+              <TouchableOpacity 
+                style={{flexDirection:'row',marginBottom:5}}
+                onPress={()=>this.goToDetailChapter(item.manga,item.chapter)}
+              >
+              <Image
+                style={{width:30, height:30, marginRight:10}} 
+                source={require('../assets/icon/chapter.png')}/>
+                  <View>
+                  <Text>
+                    {`Chapter ${item.number} : ${item.name}`}
+                  </Text>
+                  <Text style={{color:'#7f8c8d'}}>{this.formatDate(item.createdAt)}</Text>
+                </View>
+              </TouchableOpacity>
+            }
+            keyExtractor = {(item,index)=>index.toString()}
+            />
           </View>
         </Card>
-      </View>
+      </ScrollView>
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    getDetailMangaLocal: state.getDetailManga, // redux/reducer/index.js
+    getChapterMangasLocal : state.chapterMangas
+  }
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    getDetailManga : (params) => dispatch(actionGetDetailManga.getDetailManga(params)), // redux/action
+    getChapterMangas : (params,token) => dispatch(actionGetChapterMangas.getChaptersMangas(params,token))
+  }
+}
+
 const styles = StyleSheet.create({
     imageChapter:{
         height:150,
@@ -130,18 +184,20 @@ const styles = StyleSheet.create({
         margin : 5
     },
     titleChapter:{
+      textTransform: 'uppercase',
         fontSize: 20,
         fontWeight:'bold',
         marginBottom:5, 
         marginRight: 5
       },
     dateChapter :{
+        textTransform: 'uppercase',
         marginRight: 5
     },
     buttonFavorite :{
       flexDirection:'row',
       borderRadius : 5,
-      marginTop: 15, 
+      marginTop: 5, 
       backgroundColor:'#e84118',
       alignItems:'center'
     },   
@@ -154,3 +210,8 @@ const styles = StyleSheet.create({
     }
     
 })
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Details);

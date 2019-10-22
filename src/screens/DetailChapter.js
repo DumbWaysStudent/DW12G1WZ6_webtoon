@@ -11,6 +11,11 @@ const shareOptions = {
     subject: 'Subject'
   };
 
+componentDidMount=()=>{
+    const param = this.props.navigation.state.params  
+    console.log(param.manga)
+}
+
 export default class DetailChapter extends Component {
   constructor(props) {
     super(props);
@@ -27,6 +32,11 @@ export default class DetailChapter extends Component {
 
   onSharePress = () => Share.share(shareOptions);
   goToPrevScreen = () =>  this.props.navigation.goBack();
+
+  componentDidMount(){
+    const param = this.props.navigation.state.params  
+    console.log(param.manga)
+  }
 
   render() {
     return (

@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   manga.associate = function(models) {
     // associations can be defined here
     manga.belongsTo(models.users,{
-      as : 'uri',
+      as : 'users',
       foreignKey : 'author'
     })
   };

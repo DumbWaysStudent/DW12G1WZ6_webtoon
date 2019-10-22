@@ -3,6 +3,7 @@ const models = require ('../models')
 const mangas = models.manga
 const chapters = models.chapter
 const lastestChapters = models.lastestChapters
+const users = models.users
 const Op = sequelize.Op
 
 //manga
@@ -18,7 +19,11 @@ exports.searchMangas = async ( req,res) =>{
     const dataMangas = await mangas.findAll({
         where:{
             id:req.params.mangaId
-        }
+        },
+        include: [{
+            model: users,
+            as: "users"
+        }],
     })
     res.send(dataMangas)
 }
@@ -77,7 +82,9 @@ exports.deleteManga = async (req,res) => {
 exports.showChapter = async (req,res) => {
     const mangaId = req.params.mangaId
     const dataChapter = await chapters.findAll({
-        manga: mangaId
+        where : {
+            manga: mangaId
+        }
     })
     res.send(dataChapter)
 }

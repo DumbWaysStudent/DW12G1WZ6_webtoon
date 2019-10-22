@@ -8,7 +8,7 @@ exports.index =async (req,res) => {
 
 exports.show = async(req,res) => {
     mangaId = req.params.mangaId
-    chapterId = req.params.chapterId
+    chapterId = req.params.idChapter
     const chapterImages = await images.findAll({
         where:{
             manga : mangaId,

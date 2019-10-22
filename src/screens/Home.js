@@ -23,6 +23,7 @@ class Home extends Component {
 
   toDetailScreen=(item)=>{
     this.props.navigation.navigate('Details',item.manga)
+    console.log(item.manga)
   }
   componentDidMount= async() =>{
 
