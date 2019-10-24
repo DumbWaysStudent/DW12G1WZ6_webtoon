@@ -7,12 +7,12 @@ exports.index =async (req,res) => {
 }
 
 exports.show = async(req,res) => {
-    mangaId = req.params.mangaId
     chapterId = req.params.idChapter
+    mangaId = req.params.mangaId
     const chapterImages = await images.findAll({
         where:{
-            manga : mangaId,
-            chapter : chapterId
+            chapter : chapterId,
+            manga : mangaId
         }
     })
     res.send(chapterImages)

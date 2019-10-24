@@ -24,11 +24,6 @@ export default class EditProfile extends Component {
           path: 'images',
         },
       };
-      
-      /**
-       * The first arg is the options object for customization (it can also be null or omitted for default options),
-       * The second arg is the callback which sends object: response (more info in the API Reference)
-       */
       ImagePicker.showImagePicker(options, (response) => {
         console.log('Response = ', response);
       
@@ -40,10 +35,6 @@ export default class EditProfile extends Component {
           console.log('User tapped custom button: ', response.customButton);
         } else {
           const source = { uri: response.uri };
-      
-          // You can also display the image using data:
-          // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-      
           this.setState({
             profilePhoto: source,
           });

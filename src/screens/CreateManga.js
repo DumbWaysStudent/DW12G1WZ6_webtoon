@@ -1,37 +1,69 @@
 import React, { Component } from 'react';
-import { View, Text,FlatList,StyleSheet,TouchableOpacity,Image } from 'react-native';
-import { Form,Item, Input, Label,Header, Left, Body, Right,Icon } from 'native-base';
-
+import { View, Text,FlatList,StyleSheet,TouchableOpacity,Image,ScrollView,AsyncStorage } from 'react-native';
+import { Form,Item, Input, Label,Header, Left, Body, Right,Icon,Textarea } from 'native-base';
+import ImagePicker from 'react-native-image-picker';
+import axios from 'axios';
+import jwt_decode from 'jwt-decode';
+import MangaCreation from './MangaCreation';
 export default class CreateManga extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listManga:[
-        {date:'15 Agustus 2028', image:require('../assets/cover/boku.jpg'), title:'Boku No Pico'},
-        {date:'14 Agustus 2028', image:require('../assets/cover/cover_onepiece.jpg'), title:'One Pice'},
-        {date:'13 Agustus 2028', image:require('../assets/cover/sunarto.jpg'), title:'Sunarto'}],
-      input : ''
+      input : '',
+      title : '',
+      synopsis :'',
+      genre : '',
+      cover : ''
     };
   }
 
-  goToPrevScreen = () =>  this.props.navigation.goBack();
-  goToCreateChapter = () =>  this.props.navigation.navigate('CreateChapter');
-  goToDetailCreateChapter =()=> this.props.navigation.navigate('DetailCreateChapter')
-  addManga =()=>{
-    const ListManga = this.state.listManga;
-    const addedManga = [{
-      date : '17 Agustus 2019',
-      image : require('../assets/cover/sunarto.jpg'),
-      title : this.state.input
-    }]
-    this.setState({
-      listManga : [...ListManga,...addedManga]
-    })
+  handleCamera=()=>{
+    const options = {
+        title: 'Select Avatar',
+        customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+        storageOptions: {
+          skipBackup: true,
+          path: 'images',
+        },
+      };
+      ImagePicker.showImagePicker(options, (response) => {
+        console.log('Response = ', response);
+      
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else if (response.customButton) {
+          console.log('User tapped custom button: ', response.customButton);
+        } else {
+          let tmpPhoto = {
+            uri: response.uri,
+            type: response.type,
+            name: response.fileName,
+          };
+          const source = response;
+          this.setState({
+            cover: tmpPhoto,
+          });
+        }
+      });
   }
-  
+  addManga = async() =>{
+    const token = await AsyncStorage.getItem('user-token')
+    const id = jwt_decode(token)
+    const formData = new FormData()
+    formData.append('title',this.state.title)
+    formData.append('synopsis',this.state.synopsis)
+    formData.append('genre',this.state.genre)
+    formData.append('cover',this.state.cover)
+    const res = await axios.post(`http://192.168.73.2:5000/mangaky/manga/add/${id.userId}`,formData)
+    console.log(res)
+    
+  }
+
   render() {
     return (
-    <View>
+    <ScrollView>
         <Header style ={{backgroundColor:'light-gray'}}>
           <Left>
             <TouchableOpacity transparent>
@@ -54,29 +86,37 @@ export default class CreateManga extends Component {
           <Item>
             <Input style={styles.form}
               placeholder ='Input Title Manga'
-              onChangeText={input => this.setState({input : input})}/>
+              onChangeText={title => this.setState({title : title})}/>
+          </Item>
+        </Form>
+        <Label style={{padding : 15}}>Synopsis Manga</Label>
+        <Form>
+          <Textarea rowSpan={3} 
+          bordered 
+          style={{marginLeft:15,marginRight:15}}
+          placeholder='Input Synopsis Manga'
+          onChangeText={synopsis => this.setState({synopsis:synopsis})} />
+        </Form>
+        <Label style={{padding : 15}}>Genre</Label>
+        <Form>
+          <Item>
+            <Input style={styles.form}
+              placeholder ='Input Genre Manga'
+              onChangeText={genre => this.setState({genre : genre})}/>
+          </Item>
+        </Form>
+        <Label style={{padding : 15}}>Cover</Label>
+        <Form>
+          <Item style={{flexDirection:'row'}}>
+            <Input style={styles.formCover}
+              placeholder ='Upload Cover Manga'
+              value={this.state.cover.uri}/>
+            <TouchableOpacity style={styles.buttonUpload} onPress={this.handleCamera}>
+            </TouchableOpacity>
           </Item>
         </Form>
       </View>
-      <View style={styles.layout}>
-        <Label style={{marginBottom:15}}>Chapter</Label>
-        <FlatList
-          style={styles.flatlist}
-          data={this.state.listManga}
-          renderItem={({item})=>
-          <TouchableOpacity style={{flexDirection:'row'}}>
-            <Image
-            onPress
-            style={styles.coverMangaFav}
-            source={item.image}/>
-            <View>
-              <Text style={styles.titleMangaFav}>{item.date}</Text>
-              <Text style={styles.titleMangaFav}>{item.title}</Text>
-            </View>
-          </TouchableOpacity>
-          }
-          keyExtractor = {(item,index)=>index.toString()}
-        />
+      <View style={styles.layout}>  
         <View style={{marginBottom : 20}}>
           <TouchableOpacity style={styles.button}
           onPress ={this.addManga}>
@@ -86,7 +126,7 @@ export default class CreateManga extends Component {
             </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ScrollView>
 
     );
   }
@@ -106,7 +146,12 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   form:{
-    marginRight:10,
+    marginRight:15,
+    borderColor : 'grey',
+    borderWidth : 1
+  },
+  formCover :{
+    
     borderColor : 'grey',
     borderWidth : 1
   },
@@ -117,4 +162,10 @@ const styles = StyleSheet.create({
     backgroundColor : '#273c75',
     justifyContent : 'center',
     },
+    buttonUpload :{
+      width:50,
+      height:50,
+      backgroundColor:'red',
+      marginRight:15
+    }
 })

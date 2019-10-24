@@ -4,7 +4,12 @@ import { Header, Left, Body, Right, Icon, CardItem,Card } from 'native-base';
 
 const fitScreen = Dimensions.get('window').width;
 
-export default class ManageManga extends Component {
+import {connect} from 'react-redux'
+
+import * as actionGetDetailManga from './../redux/actions/actionGetDetailManga'
+
+ 
+ class ManageManga extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,9 +19,17 @@ export default class ManageManga extends Component {
     };
   }
   
-  goToChapterScreen = ()=>this.props.navigation.navigate('Chapters')
+  goToEditManga = () => this.props.navigation.navigate('EditManga',this.props.navigation.state.params)
+  goToChapterScreen = ()=>this.props.navigation.navigate('Chapters',this.props.navigation.state.params)
+
+  componentDidMount = async() =>{
+    const dataManga = this.props.navigation.state.params
+    console.log(dataManga)
+    this.props.getDetailManga(dataManga)
+  }
 
   render() {
+    const dataManga = this.props.getDetailMangaLocal.detailManga
     return (
       <View>
         <Header style ={{backgroundColor:'#0984e3'}}>
@@ -35,30 +48,30 @@ export default class ManageManga extends Component {
         <Card style={{width:340,alignSelf:'center'}}>
         <FlatList
               style={{padding:10}}
-              data={this.state.listManga}
+              data={dataManga}
               renderItem={({item})=>
               <TouchableOpacity style={{flexDirection:'row'}}
                 onPress={this.goToDetailChapter}>
                 <Image
                 style={styles.imageChapter}
-                source={item.image}/>
+                source={{uri:`http://192.168.73.2:5000/mangaky/${item.cover}`}}/>
                 <View >
                   <Text style={styles.titleChapter}>Manage Manga</Text>
                    <View style={{flexDirection:'row'}}>
                     <Text style={styles.dateChapter}>TITLE : </Text>
-                    <Text style={styles.dateChapter}>ONE PIECE </Text>
+                    <Text style={styles.dateChapter}>{item.title} </Text>
                   </View>
                   <View style={{flexDirection:'row'}}>
                     <Text style={styles.dateChapter}>AUTHOR(S) : </Text>
-                    <Text style={styles.dateChapter}>DEDE IKI </Text>
+                    <Text style={styles.dateChapter}>{item.users.name} </Text>
                   </View>
                   <View style={{flexDirection:'row'}}>
                     <Text style={styles.dateChapter}>GENRE : </Text>
-                    <Text style={styles.dateChapter}>ADVENTURE </Text>
+                    <Text style={styles.dateChapter}>{item.genre}</Text>
                   </View>
                   <View style={{flexDirection:'row'}}>
                     <Text style={styles.dateChapter}>CREATED AT : </Text>
-                    <Text style={styles.dateChapter}>2019-10-18 </Text>
+                    <Text style={styles.dateChapter}>{item.createdAt} </Text>
                   </View>
                   <View style={{flexDirection:'row'}}>
                     <Text style={styles.dateChapter}>STATUS : </Text>
@@ -72,7 +85,7 @@ export default class ManageManga extends Component {
         </Card>
         <TouchableOpacity 
               style={styles.button}
-              onPress={this.goToMangaCreation}>
+              onPress={this.goToEditManga}>
               <Text style={{padding:20,color:'white'}}>Edit Your Manga</Text>
               <Icon name='arrow-dropright' style={styles.nextIcon} onPress={this.goToPrevScreen}/>
             </TouchableOpacity>
@@ -100,6 +113,7 @@ const styles = StyleSheet.create({
         marginRight: 5
       },
     dateChapter :{
+      textTransform: 'uppercase',
         marginRight: 5
     },
     buttonFavorite :{
@@ -138,7 +152,22 @@ const styles = StyleSheet.create({
         color: 'white',
         alignSelf:'flex-end',
         margin:10
-      }
-    
-    
+      }      
 })
+
+const mapStateToProps = state => {
+  return {
+    getDetailMangaLocal: state.getDetailManga, // redux/reducer/index.js
+  
+  }
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    getDetailManga : (params) => dispatch(actionGetDetailManga.getDetailManga(params)), // redux/action
+ 
+  }
+}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ManageManga);

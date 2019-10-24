@@ -8,6 +8,7 @@ import axios from 'axios'
 import {connect} from 'react-redux'
 import * as actionChapters from './../redux/actions/actionsChapters'
 import * as actionMyFavorites from './../redux/actions/actionsMyFavorites'
+import * as actionMyFavorites from './../redux/actions/actionsMyMangas'
 
 const width = Dimensions.get('window').width;
 
@@ -26,18 +27,12 @@ class Home extends Component {
     console.log(item.manga)
   }
   componentDidMount= async() =>{
-
-    await this.props.getLatestChapters()
-    
-    const token = await AsyncStorage.getItem('user-token')
-    const id = jwt_decode(token)
-   
-    await this.props.getMyFavorites(id.userId)
-    console.log(this.props.myFavoritesLocal)
+    await this.props.getMangasRecommendation()
   }
 
 
   render() {
+    const dataMangasRecommendation = this.props.dataMangasRecommendationLocal
     return (
       <ScrollView style={{padding : 5}}>
         <Form>
@@ -68,7 +63,7 @@ class Home extends Component {
         <Card>
           <View style={{flexDirection:"row"}}>
             <View style={{backgroundColor: '#273c75', alignSelf:'baseline'}}>
-              <Text style={styles.label}>Your Favorite Manga</Text>
+              <Text style={styles.label}>Recommended Manga</Text>
             </View>
             <Image
               style={{width:30, height:30, marginLeft:180}} 
@@ -78,13 +73,13 @@ class Home extends Component {
                 showsHorizontalScrollIndicator ={false}
                 style={styles.horizontalFlatlist}
                 horizontal={true}
-                data={this.props.myFavoritesLocal.myFavorites}
+                data={d}
                 renderItem={({item})=>
                 <TouchableOpacity onPress={()=>this.toDetailScreen(item)}>
                   <Image
                   onPress
                   style={styles.coverMangaFav}
-                  source={{uri:item.mangas.cover}}/>
+                  source={{uri:`http://192.168.73.2:5000/mangaky/${item.mangas.cover}`}}/>
                   <Text style={styles.titleMangaFav}>{item.mangas.title}</Text>
                 </TouchableOpacity>
                 }
@@ -102,11 +97,11 @@ class Home extends Component {
                 return(
                   <TouchableOpacity key={index} 
                   style={{flexDirection:"row",padding : 10}}
-                  onPress={this.toDetailScreen}>
+                  onPress={()=>this.toDetailScreen(item)}>
                  
                     <Image
                       style={styles.coverAll}
-                      source={{uri: item.mangas.cover}}/>
+                      source={{uri:`http://192.168.73.2:5000/mangaky/${item.mangas.cover}`}}/>
                       <View>
                         <Text style={{fontWeight:'bold'}}>{item.mangas.title}</Text>
                         <Text>Chapter {item.number}</Text>
@@ -127,14 +122,14 @@ class Home extends Component {
 
 const mapStateToProps = state => {
   return {
-    chaptersLocal: state.chapters, // redux/reducer/index.js
-    myFavoritesLocal : state.myFavorites
+    dataMangasRecommendationLocal : state.mangas // redux/reducers/index.js
   }
 }
 const mapDispatchToProps = dispatch => {
   return {
     getLatestChapters: () => dispatch(actionChapters.getLatestChapters()), // redux/action
-    getMyFavorites : (params) => dispatch(actionMyFavorites.getMyFavorites(params))
+    getMyFavorites : (params) => dispatch(actionMyFavorites.getMyFavorites(params)),
+    getRecommnedation : () => dispatch(actionMangas.getMangasRecommendation())
   }
 }
 

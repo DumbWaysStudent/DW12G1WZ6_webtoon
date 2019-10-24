@@ -4,54 +4,28 @@ import { Form,Item, Input, Label,Header, Left, Body, Right,Icon,Textarea } from 
 import ImagePicker from 'react-native-image-picker';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-export default class AddPage extends Component {
+import MangaCreation from './MangaCreation';
+export default class AddChapter extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      image : '',
-      page : '',
+      number : '',
+      title : '',
     };
   }
 
-  handleCamera=()=>{
-    const options = {
-        title: 'Select Avatar',
-        customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
-        storageOptions: {
-          skipBackup: true,
-          path: 'images',
-        },
-      };
-      ImagePicker.showImagePicker(options, (response) => {
-        console.log('Response = ', response);
-      
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
-        } else if (response.customButton) {
-          console.log('User tapped custom button: ', response.customButton);
-        } else {
-          let tmpPhoto = {
-            uri: response.uri,
-            type: response.type,
-            name: response.fileName,
-          };
-          const source = response;
-          this.setState({
-            image: tmpPhoto,
-          });
-        }
-      });
-  }
-  addManga = async() =>{
-    const params = this.props.navigation.state.params
+  
+
+  addChapter = async() =>{
+    const dataManga = this.props.navigation.state.params
     const formData = new FormData()
-    formData.append('chapter',params.numberChapter)
-    formData.append('page',this.state.page)
-    formData.append('image',this.state.image)
-    const res = await axios.post(`http://192.168.73.2:5000/mangaky/chapter/mangaId/${params.idManga}/image/add`,formData)
-    console.log(res)
+    const res = await axios.post(`http://192.168.73.2:5000/mangaky/chapter/create/${dataManga}`,{
+        name:this.state.title,
+        number:this.state.number,
+        manga:dataManga
+    })
+    console.log(this.state)
+    
   }
 
   render() {
@@ -65,7 +39,7 @@ export default class AddPage extends Component {
             </TouchableOpacity>
           </Left>
           <Body>
-              <Text>AddPage</Text>
+              <Text>Add Chapter</Text>
           </Body>
           <Right>
             <TouchableOpacity transparent>
@@ -74,31 +48,29 @@ export default class AddPage extends Component {
           </Right>
         </Header>
       <View>
-      <Label style={{padding : 15}}>Number Page</Label>
+        <Label style={{padding : 15}}>Title</Label>
         <Form>
           <Item>
             <Input style={styles.form}
-              placeholder ='Input Number Page'
-              onChangeText={page => this.setState({page : page})}/>
+              placeholder ='Input Title Chapter'
+              onChangeText={title => this.setState({title : title})}/>
           </Item>
         </Form>
-        <Label style={{padding : 15}}>File Page</Label>
+        <Label style={{padding : 15}}>Number Chapter</Label>
         <Form>
-          <Item style={{flexDirection:'row'}}>
-            <Input style={styles.formCover}
-              placeholder ='Upload Page'
-              value={this.state.image.uri}/>
-            <TouchableOpacity style={styles.buttonUpload} onPress={this.handleCamera}>
-            </TouchableOpacity>
+          <Item>
+            <Input style={styles.form}
+              placeholder ='Input Number Chapter'
+              onChangeText={number => this.setState({number : number})}/>
           </Item>
         </Form>
       </View>
       <View style={styles.layout}>  
         <View style={{marginBottom : 20}}>
           <TouchableOpacity style={styles.button}
-          onPress ={this.addManga}>
+          onPress ={this.addChapter}>
             <Text style={{color:'white'}}>
-              Add Page
+              Add Chapter
             </Text>
             </TouchableOpacity>
         </View>

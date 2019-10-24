@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux'
 import { View, Text,FlatList,StyleSheet,TouchableOpacity,Image,ScrollView,AsyncStorage } from 'react-native';
 import { Form,Item, Input, Label,Header, Left, Body, Right,Icon,Textarea } from 'native-base';
 import ImagePicker from 'react-native-image-picker';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-export default class AddPage extends Component {
+import * as actionGetDetailManga from './../redux/actions/actionGetDetailManga'
+class EditManga extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      image : '',
-      page : '',
+      input : '',
+      title : '',
+      synopsis :'',
+      genre : '',
+      cover : '',
+      notUpdateCover :true
     };
   }
 
@@ -39,22 +45,41 @@ export default class AddPage extends Component {
           };
           const source = response;
           this.setState({
-            image: tmpPhoto,
+            notUpdateCover:false,
+            cover: tmpPhoto,
           });
         }
       });
   }
-  addManga = async() =>{
-    const params = this.props.navigation.state.params
+  
+  updateManga = async() =>{
+    const dataManga = this.props.navigation.state.params
+    const token = await AsyncStorage.getItem('user-token')
+    const id = jwt_decode(token)
     const formData = new FormData()
-    formData.append('chapter',params.numberChapter)
-    formData.append('page',this.state.page)
-    formData.append('image',this.state.image)
-    const res = await axios.post(`http://192.168.73.2:5000/mangaky/chapter/mangaId/${params.idManga}/image/add`,formData)
+    formData.append('title',this.state.title)
+    formData.append('synopsis',this.state.synopsis)
+    formData.append('genre',this.state.genre)
+    formData.append('cover',this.state.cover)
+    const res = await axios.put(`http://192.168.73.2:5000/mangaky/manga/update/${dataManga}`,formData)
     console.log(res)
   }
 
+  componentDidMount=()=>{
+    const param = this.props.navigation.state.params
+    this.props.getDetailManga(param)
+    console.log(this.props.getDetailMangaLocal.detailManga)
+    const dataManga = this.props.getDetailMangaLocal.detailManga
+    this.setState({
+        title : dataManga[0].title ,
+        synopsis :dataManga[0].synopsis,
+        genre : dataManga[0].genre,
+        cover : dataManga[0].cover,
+    })
+  }
+
   render() {
+   
     return (
     <ScrollView>
         <Header style ={{backgroundColor:'light-gray'}}>
@@ -65,7 +90,7 @@ export default class AddPage extends Component {
             </TouchableOpacity>
           </Left>
           <Body>
-              <Text>AddPage</Text>
+              <Text>Update Manga</Text>
           </Body>
           <Right>
             <TouchableOpacity transparent>
@@ -74,20 +99,35 @@ export default class AddPage extends Component {
           </Right>
         </Header>
       <View>
-      <Label style={{padding : 15}}>Number Page</Label>
+        <Label style={{padding : 15}}>Title</Label>
         <Form>
           <Item>
             <Input style={styles.form}
-              placeholder ='Input Number Page'
-              onChangeText={page => this.setState({page : page})}/>
+             value={this.state.title}
+              onChangeText={title => this.setState({title : title})}/>
           </Item>
         </Form>
-        <Label style={{padding : 15}}>File Page</Label>
+        <Label style={{padding : 15}}>Synopsis Manga</Label>
+        <Form>
+          <Textarea rowSpan={3} 
+          bordered 
+          style={{marginLeft:15,marginRight:15}}
+          value={this.state.synopsis}
+          onChangeText={synopsis => this.setState({synopsis:synopsis})} />
+        </Form>
+        <Label style={{padding : 15}}>Genre</Label>
+        <Form>
+          <Item>
+            <Input style={styles.form}
+              value={this.state.genre}
+              onChangeText={genre => this.setState({genre : genre})}/>
+          </Item>
+        </Form>
+        <Label style={{padding : 15}}>Cover</Label>
         <Form>
           <Item style={{flexDirection:'row'}}>
             <Input style={styles.formCover}
-              placeholder ='Upload Page'
-              value={this.state.image.uri}/>
+              value={this.state.notUpdateCover?this.state.cover:this.state.cover.uri}/>
             <TouchableOpacity style={styles.buttonUpload} onPress={this.handleCamera}>
             </TouchableOpacity>
           </Item>
@@ -96,9 +136,9 @@ export default class AddPage extends Component {
       <View style={styles.layout}>  
         <View style={{marginBottom : 20}}>
           <TouchableOpacity style={styles.button}
-          onPress ={this.addManga}>
+          onPress ={this.updateManga}>
             <Text style={{color:'white'}}>
-              Add Page
+              Update Manga
             </Text>
             </TouchableOpacity>
         </View>
@@ -146,3 +186,19 @@ const styles = StyleSheet.create({
       marginRight:15
     }
 })
+const mapStateToProps = state => {
+    return {
+      getDetailMangaLocal: state.getDetailManga, // redux/reducer/index.js
+    
+    }
+  }
+  const mapDispatchToProps = dispatch => {
+    return {
+      getDetailManga : (params) => dispatch(actionGetDetailManga.getDetailManga(params)), // redux/action
+   
+    }
+  }
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(EditManga);

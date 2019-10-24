@@ -5,6 +5,7 @@ const chapters = models.chapter
 const lastestChapters = models.lastestChapters
 const users = models.users
 const Op = sequelize.Op
+const imagesChapter = models.image
 
 //manga
 
@@ -12,6 +13,20 @@ const Op = sequelize.Op
 exports.index =async (req,res) => {
     
     const dataMangas = await mangas.findAll({})
+    res.send(dataMangas)
+}
+
+exports.mangaRecommendation = async (req,res) => {
+    const dataMangas = await mangas.findAll({order: sequelize.literal('rand()'), limit: 5})
+    res.send(dataMangas)
+}
+
+exports.mangaUsers = async (req,res) =>{
+    const dataMangas = await mangas.findAll({
+        where:{
+            author:req.params.idUser
+        }
+    })
     res.send(dataMangas)
 }
 
@@ -48,25 +63,32 @@ exports.searchTitle = async (req,res) => {
     res.send(dataManga)
 }
 exports.addMangas = async (req,res) => {
+    console.log(req.body.title)
     const {userId} = req.params
-    const {title,genre,cover} = req.body
+    const {title,genre} = req.body
     const dataManga = await mangas.create({
         title,
         genre,
-        cover,
+        cover : req.file.path,
         author : userId
     })
-    res.send(dataManga)
+    res.send(req.file.path)
 }
 exports.updateManga = async (req,res) => {
     const mangaId = req.params.mangaId
-    const data = req.body
-    const dataManga = await mangas.update(data,{
+    const {title,genre} = req.body
+    const dataManga = await mangas.update(
+    {
+        title,
+        genre,
+        cover : req.file.path,
+    },
+    {
         where:{
             id : mangaId 
         }
     })
-    res.send(data)
+    res.send(req.file.path)
 }
 exports.deleteManga = async (req,res) => {
     const mangaId = req.params.mangaId
@@ -100,11 +122,11 @@ exports.showLastestChapter = async(req,res) =>{
 
 exports.createChapter = async (req,res) => {
     const mangaId = req.params.mangaId
-    const {image,title} = req.body
+    const {number,name} = req.body
     const dataChapter = await chapters.create({
         manga : mangaId,
-        image,
-        title
+        name,
+        number
     })
     res.send(dataChapter)
 }
@@ -155,16 +177,25 @@ exports.getLastestChapters = async (req,res) => {
 // images chapter
 
 exports.createImageChapter = async (req,res) =>{
-    const data = req.body
-    const dataImageChapter = await imageChapter.create({
-        data
-    })
-    res.send(data)
+    const {chapter,page} = req.body
+    const idManga = req.params.id
+    
+        const dataImageChapter = await imagesChapter.create({
+            chapter,
+            image : req.file.path,
+            page,
+            manga : idManga
+        })
+        res.send(dataImageChapter)
+    
+        console.log('gak masuk')
+    
+  
 }
 
 exports.deleteImageChapter = async (req,res) =>{
-    const imageChapterId = req.params.imageChapterId
-    const dataImageChapter = await chapters.destroy({
+    const imageChapterId = req.params.id
+    const dataImageChapter = await imagesChapter.destroy({
         where:{
          id:imageChapterId
         }

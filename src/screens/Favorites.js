@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text,FlatList,StyleSheet,TouchableOpacity,Image } from 'react-native';
+import { View, Text,FlatList,StyleSheet,TouchableOpacity,Image,AsyncStorage } from 'react-native';
 import { Icon,Form,Item, Input } from 'native-base';
-
-export default class Favorites extends Component {
+import {connect} from 'react-redux'
+import jwt_decode from 'jwt-decode';
+import * as actionMyFavorites from './../redux/actions/actionsMyFavorites'
+class Favorites extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listManga:[
-        {title:'Boku No Pico', image:require('../assets/cover/boku.jpg'), favorites:'90+ Favorites'},
-        {title:'One Piece', image:require('../assets/cover/cover_onepiece.jpg'),favorites:'100+ Favorites'},
-        {title:'Sunarto', image:require('../assets/cover/sunarto.jpg'),favorites:'70+ Favorites'},
-        {title:'Bocah Laknat', image:require('../assets/cover/bocahLaknat.jpg'),favorites:'80+ Favorites'}],
         input :''
     };
   }
@@ -23,6 +20,14 @@ export default class Favorites extends Component {
     this.setState({
       listManga : [...result]
     })
+  }
+  
+  componentDidMount= async()=>{
+    const token = await AsyncStorage.getItem('user-token')
+    const id = jwt_decode(token)
+   
+    await this.props.getMyFavorites(id.userId)
+    console.log(this.props.myFavoritesLocal)
   }
 
   render() {
@@ -40,16 +45,15 @@ export default class Favorites extends Component {
 
         <FlatList
           style={styles.flatlist}
-          data={this.state.listManga}
+          data={this.props.myFavoritesLocal.myFavorites}
           renderItem={({item})=>
           <TouchableOpacity onPress={this.toDetailScreen} style={{flexDirection:'row'}}>
             <Image
             onPress
             style={styles.coverMangaFav}
-            source={item.image}/>
+            source={{uri :`http://192.168.73.2:5000/mangaky/${item.mangas.cover}`}}/>
             <View>
-              <Text style={styles.titleMangaFav}>{item.title}</Text>
-              <Text style={styles.titleMangaFav}>{item.favorites}</Text>
+              <Text style={styles.titleMangaFav}>{item.mangas.title}</Text>
             </View>
           </TouchableOpacity>
           }
@@ -74,3 +78,17 @@ const styles = StyleSheet.create({
     marginRight: 5,
   }
 })
+const mapStateToProps = state => {
+  return {
+    myFavoritesLocal : state.myFavorites
+  }
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    getMyFavorites : (params) => dispatch(actionMyFavorites.getMyFavorites(params))
+  }
+}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Favorites);

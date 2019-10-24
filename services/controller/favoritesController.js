@@ -1,3 +1,4 @@
+const sequelize = require('sequelize')
 const models = require ('../models')
 const favorites = models.favorite
 const myFavorites = models.myFavorites
@@ -10,7 +11,7 @@ exports.show = async (req,res) =>{
         },
         include: [{
             model: manga,
-            as: "mangas"
+            as: "mangas",
         }],
     })
     res.send(dataFavorite)

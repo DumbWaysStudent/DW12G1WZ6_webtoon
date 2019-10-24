@@ -6,7 +6,8 @@ import {connect} from 'react-redux'
 import * as actionChapters from './../redux/actions/actionsChapters'
 import * as actionGetDetailManga from './../redux/actions/actionGetDetailManga'
 import * as actionGetChapterMangas from './../redux/actions/actionGetChapterMangas'
-
+import jwt_decode from 'jwt-decode';
+import * as actionMyFavorites from './../redux/actions/actionsMyFavorites'
 const fitScreen = Dimensions.get('window').width;
 
 const shareOptions = {
@@ -20,9 +21,7 @@ class Details extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        listManga:[
-          
-        ]
+      mangaFavorite :''
     };
   }  
   
@@ -43,14 +42,21 @@ class Details extends Component {
     const token = await AsyncStorage.getItem('user-token')
     this.props.getDetailManga(dataManga)
     this.props.getChapterMangas(dataManga,token)
+    console.log(this.props.getChapterMangasLocal.chapterMangas)
   }
-
+  favoriteHandler = async() =>{
+    const token = await AsyncStorage.getItem('user-token')
+    const id = jwt_decode(token)
+    await this.props.getMyFavorites(id.userId)
+    console.log(this.props.myFavoritesLocal)
+  }
   formatDate = (time) => {
     var dt = new Date(time);
     var mo = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     var string = `${dt.getDate()} ${mo[dt.getMonth()]} ${dt.getFullYear()}`
     return string;
-}
+  }
+
 
   render() {
     const dataManga = this.props.getDetailMangaLocal.detailManga
@@ -80,7 +86,7 @@ class Details extends Component {
                 onPress={this.goToDetailChapter}>
                 <Image
                 style={styles.imageChapter}
-                source={{uri : dataManga.length >0?dataManga[0].cover:null}}
+                source={{uri : `http://192.168.73.2:5000/mangaky/${dataManga.length >0?dataManga[0].cover:null}`}}
                 />
                 <View >
                   <Text style={styles.titleChapter}>
@@ -138,7 +144,7 @@ class Details extends Component {
               renderItem={({item})=>
               <TouchableOpacity 
                 style={{flexDirection:'row',marginBottom:5}}
-                onPress={()=>this.goToDetailChapter(item.manga,item.chapter)}
+                onPress={()=>this.goToDetailChapter(item.manga,item.number)}
               >
               <Image
                 style={{width:30, height:30, marginRight:10}} 
@@ -163,13 +169,15 @@ class Details extends Component {
 const mapStateToProps = state => {
   return {
     getDetailMangaLocal: state.getDetailManga, // redux/reducer/index.js
-    getChapterMangasLocal : state.chapterMangas
+    getChapterMangasLocal : state.chapterMangas,
+    myFavoritesLocal : state.myFavorites
   }
 }
 const mapDispatchToProps = dispatch => {
   return {
     getDetailManga : (params) => dispatch(actionGetDetailManga.getDetailManga(params)), // redux/action
-    getChapterMangas : (params,token) => dispatch(actionGetChapterMangas.getChaptersMangas(params,token))
+    getChapterMangas : (params,token) => dispatch(actionGetChapterMangas.getChaptersMangas(params,token)),
+    getMyFavorites : (params) => dispatch(actionMyFavorites.getMyFavorites(params))
   }
 }
 

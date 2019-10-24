@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity,FlatList,Dimensions,StyleSheet,Image } from 'react-native';
+import { View, Text, TouchableOpacity,FlatList,Dimensions,StyleSheet,Image,AsyncStorage } from 'react-native';
 import { Container, Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
+
+import {connect} from 'react-redux'
+import * as actionGetPages from './../redux/actions/actionGetPages'
 
 const fitScreen = Dimensions.get('window').width;
 
@@ -11,12 +14,9 @@ const shareOptions = {
     subject: 'Subject'
   };
 
-componentDidMount=()=>{
-    const param = this.props.navigation.state.params  
-    console.log(param.manga)
-}
 
-export default class DetailChapter extends Component {
+
+class DetailChapter extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,9 +33,12 @@ export default class DetailChapter extends Component {
   onSharePress = () => Share.share(shareOptions);
   goToPrevScreen = () =>  this.props.navigation.goBack();
 
-  componentDidMount(){
-    const param = this.props.navigation.state.params  
-    console.log(param.manga)
+  componentDidMount = async() =>{
+    const token = await AsyncStorage.getItem('user-token')
+    const param = this.props.navigation.state.params
+    await this.props.getPages(param.manga,param.chapter,token)
+    console.log(this.props.getPagesLocal)
+    
   }
 
   render() {
@@ -59,12 +62,12 @@ export default class DetailChapter extends Component {
                 </Right>
             </Header>
             <FlatList
-                data={this.state.listManga}
+                data={this.props.getPagesLocal.pages}
                 renderItem={({item})=>
                 <View>
                     <Image
                     style={styles.imageChapter}
-                    source={item.image}/>
+                    source={{uri :item.image}}/>
                   </View>
                 }
                 keyExtractor = {(item,index)=>index.toString()}
@@ -73,9 +76,25 @@ export default class DetailChapter extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+    return {
+      getPagesLocal: state.pages, // redux/reducer/index.js
+    }
+  }
+  const mapDispatchToProps = dispatch => {
+    return {
+      getPages : (manga,chapter,token) => dispatch(actionGetPages.getPages(manga,chapter,token)), // redux/action
+    }
+  }
+
 const styles = StyleSheet.create({
     imageChapter :{
     width : fitScreen,
     height : 700,
     marginBottom: 20,}
 })
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(DetailChapter);

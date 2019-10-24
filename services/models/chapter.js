@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     number :DataTypes.INTEGER,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
-    name : DataTypes.STRING
+    name : DataTypes.STRING,
     
   }, {});
   chapter.associate = function(models) {

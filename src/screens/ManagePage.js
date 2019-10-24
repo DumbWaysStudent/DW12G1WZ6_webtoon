@@ -3,40 +3,40 @@ import { View, Text,Image,Dimensions,StyleSheet,TouchableOpacity,FlatList,AsyncS
 import { Header, Left, Body, Right, Icon, CardItem,Card } from 'native-base';
 import jwt_decode from 'jwt-decode';
 const fitScreen = Dimensions.get('window').width;
-import * as actionGetMangaUser from './../redux/actions/actionGetMangaUser'
+import * as actionGetPages from './../redux/actions/actionGetPages'
 import {connect} from 'react-redux'
 import axios from 'axios'
 
- class MangaCreation extends Component {
+ class ManagePage extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-        listManga:[
-            {totalChap:'15 Chapter', image:require('../assets/cover/boku.jpg'), title:'Boku No Pico'},
-            {totalChap:'14 Chapter', image:require('../assets/cover/cover_onepiece.jpg'), title:'One Piece'},
-            {totalChap:'13 Chapter', image:require('../assets/cover/sunarto.jpg'),title:'Sunarto'},
-            {totalChap:'12 Chapter', image:require('../assets/cover/bocahLaknat.jpg'),title:'Bocah Laknat'}],
-    };
+    this.state = ''
   }  
   
   goToPrevScreen = () =>  this.props.navigation.goBack();
   goToEditScreen = (idManga) => this.props.navigation.navigate('ManageManga',idManga)
   goToCreateManga = () => this.props.navigation.navigate('CreateManga')
+  goToAddPages = () => {
+      const params={
+          idManga : this.props.navigation.state.params.idManga,
+          numberChapter : this.props.getPagesLocal.pages[0].chapter} 
+      this.props.navigation.navigate('AddPage',params)
+    }
 
   componentDidMount = async() =>{
     const token = await AsyncStorage.getItem('user-token')
-    const id = jwt_decode(token)
-    await this.props.getMangaUser(id.userId,token)
-    console.log(this.props.mangaUserLocal.mangaUser)
+    const param = this.props.navigation.state.params
+    await this.props.getPages(param.idManga,param.idChapter,token)
   }
 
-  deleteManga = async(idManga) =>{
+  deletePage = async(idPage) =>{
     const token = await AsyncStorage.getItem('user-token')
     const id = jwt_decode(token)
-    await axios.delete(`http://192.168.73.2:5000/mangaky/manga/delete/${idManga}`,{
+    await axios.delete(`http://192.168.73.2:5000/mangaky/chapter/image/delete/${idPage}`,{
       headers : {"Authorization" : `Bearer ${token}`}
-    }) 
-    await this.props.getMangaUser(id.userId,token)
+    })
+    const param = this.props.navigation.state.params
+    await this.props.getPages(param.idManga,param.idChapter,token)
   }
 
   render() {
@@ -51,13 +51,13 @@ import axios from 'axios'
           </Left>
           <Body>
               <Text>Komiky</Text>
-              <Text>My Manga Creation</Text>
+              <Text>Manga Pages</Text>
           </Body>
           <Right></Right>
         </Header>
          <FlatList
           style={styles.listChapter}
-          data={this.props.mangaUserLocal.mangaUser}
+          data={this.props.getPagesLocal.pages}
           renderItem={({item})=>
           <Card>
             <CardItem>
@@ -65,15 +65,11 @@ import axios from 'axios'
                 <View style={{flexDirection:'row'}}>
                   <Image
                   style={styles.imageChapter}
-                  source={{uri:`http://192.168.73.2:5000/mangaky/${item.cover}`}}/>
+                  source={{uri:`http://192.168.73.2:5000/mangaky/${item.image}`}}/>
                   <View>
-                    <Text style={styles.titleChapter}>{item.title}</Text>
+                    <Text style={styles.titleChapter}>Page {item.page}</Text>
                     <View style={{marginTop: 20,flexDirection:'row'}}>
-                      <TouchableOpacity style={styles.buttonManage}onPress={()=>this.goToEditScreen(item.id)}>
-                        <Icon name='copy' style={{color:'white',marginLeft:10}}></Icon>
-                        <Text style={{ color:'white' }}>Manage</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity style={styles.buttonDelete}onPress={()=>this.deleteManga(item.id)}>
+                      <TouchableOpacity style={styles.buttonDelete}onPress={()=>this.deletePage(item.id)}>
                         <Icon name='trash' style={{color:'white',marginLeft:10}}></Icon>
                       </TouchableOpacity>
                     </View>
@@ -86,7 +82,7 @@ import axios from 'axios'
           keyExtractor = {(item,index)=>index.toString()}
         />
        <TouchableOpacity style={styles.buttonAdd}
-       onPress={this.goToCreateManga}>
+       onPress={this.goToAddPages}>
          <Icon name='add' style={{color:'white',padding:10}}></Icon>
        </TouchableOpacity>
       </View>
@@ -143,16 +139,16 @@ const styles = StyleSheet.create({
     
 })
 const mapStateToProps = state => {
-  return {
-    mangaUserLocal: state.mangaUser, // redux/reducer/index.js
+    return {
+      getPagesLocal: state.pages, // redux/reducer/index.js
+    }
   }
-}
-const mapDispatchToProps = dispatch => {
-  return {
-    getMangaUser : (params,token) => dispatch(actionGetMangaUser.getMangaUser(params,token))
+  const mapDispatchToProps = dispatch => {
+    return {
+      getPages : (manga,chapter,token) => dispatch(actionGetPages.getPages(manga,chapter,token)), // redux/action
+    }
   }
-}
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MangaCreation);
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ManagePage);
